@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Typography, List, ListItem, ListItemText, IconButton } from '@mui/material';
+import { Button, Container, Typography, List, ListItem, ListItemText, IconButton, Paper } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModifyFighterModal from '../components/ModifyFighterModal';
@@ -55,12 +55,13 @@ const MyFighters = () => {
               </IconButton>
             </>
           }>
-            <ListItemText
-              //color text in black
-              color='textPrimary'
-              primary={`${fighter.firstName} ${fighter.lastName}`}
-              secondary={`Category: ${fighter.category}`}
-            />
+            <Paper style={{ padding: '10px', margin: '5px 0', backgroundColor: '#f5f5f5', borderRadius: '15px', width: '100%', minHeight: '100px' }}>
+              <ListItemText
+                primary={`${fighter.firstName} ${fighter.lastName}`}
+                secondary={`Category: ${fighter.category}`}
+                primaryTypographyProps={{ style: { color: 'black' } }}
+              />
+            </Paper>
           </ListItem>
         ))}
       </List>
