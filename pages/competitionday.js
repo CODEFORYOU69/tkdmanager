@@ -15,8 +15,8 @@ export default function CompetitionDay() {
 
     useEffect(() => {
     if (matches) {
-        setCompletedMatches(matches.filter(match => match.result === 'WINNER'));
-        setOngoingMatches(matches.filter(match => !match.result));
+        setCompletedMatches(matches.filter(match => match.result === 'WINNER' && match.isCancelled === false || match.result === 'LOSER' && match.isCancelled === false));
+        setOngoingMatches(matches.filter(match => !match.result && match.isCancelled === false));
     }
 }, [matches]);
 
@@ -154,6 +154,7 @@ console.log("completedMatches", completedMatches);
                 open={isModalOpen}
                 onClose={closeModal}
                 match={selectedMatch}
+                
             />
         )}
     </Container>

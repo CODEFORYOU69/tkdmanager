@@ -78,4 +78,5 @@ model Match {
   competition      Competition @relation(fields: [competitionId], references: [id])
   fighterId        Int
   fighter          Fighter    @relation(fields: [fighterId], references: [id])
+  isCancelled        Boolean  @default(false) // Ajout du champ isCancelled avec une valeur par défaut
 }
