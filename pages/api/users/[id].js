@@ -10,7 +10,7 @@ export default async function handler(req, res) {
         case 'GET':
             // Traiter une requête GET pour un combattant spécifique
             try {
-                const coach = await prisma.coach.findUnique({
+                const coach = await prisma.user.findUnique({
                     where: { id: coachId },
                 });
                 if (fighter) {
