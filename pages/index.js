@@ -35,7 +35,6 @@ const HomePage = () => {
   const handleSignInClick = () => {
     router.push('/inscription'); // Modifiez selon le chemin de votre page d'inscription
   };
-
   const handleLogInClick = () => {
     router.push('/login'); // Modifiez selon le chemin de votre page de connexion
   };
