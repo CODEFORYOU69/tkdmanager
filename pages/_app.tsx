@@ -1,7 +1,12 @@
 // pages/_app.tsx
 import { AppProps } from 'next/app';
-import Page from '../app/page';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+import { SnackbarProvider } from 'notistack';
+import Layout from '../app/layout';
+
+import MobileNavbar from '../components/MobileNavbar';
+
 
 const theme = createTheme({
     palette: {
@@ -23,9 +28,13 @@ const theme = createTheme({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
-    <Page>
+     <SnackbarProvider maxSnack={3}>
+        <Layout>
+      <CssBaseline />
+      <MobileNavbar />
       <Component {...pageProps} />
-    </Page>
+      </Layout>
+    </SnackbarProvider>
     </ThemeProvider>
 
   );
