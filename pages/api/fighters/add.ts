@@ -8,23 +8,22 @@ const prisma = new PrismaClient();
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { firstName, lastName, category } = req.body;
-        console.log({firstName, lastName, category});
+        console.log({ firstName, lastName, category });
         const token = req.headers.authorization?.split(' ')[1];
         console.log("token", token);
         if (!token) {
             return res.status(401).json({ message: "Unauthorized" });
         }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) ;
-        console.log("decoded", decoded);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { clubId: string };
+        const clubId = decoded.clubId;
         if (!decoded) {
             return res.status(403).json({ message: "Unauthorized operation" });
-        
         }
 
         // Continue avec la création si tout est valide
         try {
             const newFighter = await prisma.fighter.create({
-                data: { firstName, lastName, category, clubId: decoded.clubId},
+                data: { firstName, lastName, category, clubId },
             });
             res.status(201).json(newFighter);
         } catch (error: any) {

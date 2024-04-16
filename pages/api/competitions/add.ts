@@ -9,17 +9,14 @@ const prisma = new PrismaClient();
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { name, date } = req.body;
-        console.log("req.body", req.body);
         const token = req.headers.authorization?.split(' ')[1];
-        console.log("token", token)
         if (!token) {
             return res.status(401).json({ message: "Unauthorized" });
         }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) ;
-        console.log("decoded", decoded);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { clubId: string };
+        const clubId = decoded.clubId;
         if (!decoded) {
             return res.status(403).json({ message: "Unauthorized operation" });
-        
         }
 
         try {
@@ -27,7 +24,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 data: {
                     name,
                     date: new Date(date),
-                    clubId: decoded.clubId,
+                    clubId: clubId,
                 },
             });
             res.status(201).json(newCompetition);
