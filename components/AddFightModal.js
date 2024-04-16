@@ -72,7 +72,7 @@ const AddFightModal = ({ open, onClose, competitionId }) => {
                     >
                         {fighters.map((fighter) => (
                             <MenuItem key={fighter.id} value={fighter.id}>
-                                {fighter.name} {fighter.lastName}
+                                {fighter.firstName} {fighter.lastName}
                             </MenuItem>
                         ))}
                     </Select>

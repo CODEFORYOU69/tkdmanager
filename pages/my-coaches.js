@@ -67,6 +67,8 @@ const MyCoaches = () => {
             </>
           }>
             <ListItemText
+              //color text in black
+              color='textPrimary'
               primary={`${coach.name} `}
              
             />

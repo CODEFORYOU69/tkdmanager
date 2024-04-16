@@ -56,6 +56,8 @@ const MyFighters = () => {
             </>
           }>
             <ListItemText
+              //color text in black
+              color='textPrimary'
               primary={`${fighter.firstName} ${fighter.lastName}`}
               secondary={`Category: ${fighter.category}`}
             />
