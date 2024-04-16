@@ -15,7 +15,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             return res.status(401).json({ message: "Unauthorized" });
         }
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { clubId: string };
-        const clubId = decoded.clubId;
+        const clubId = parseInt(decoded.clubId);
         if (!decoded) {
             return res.status(403).json({ message: "Unauthorized operation" });
         }
