@@ -40,19 +40,3 @@ export async function findClubByName(clubName: string) {
   return club;
 }
 
-// Fonction pour accepter un utilisateur dans un club spécifique
-export async function acceptUser(userId: number, clubId: number): Promise<void> {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    include: { club: true }
-  });
-
-  if (!user || user.clubId !== clubId) {
-    throw new Error("User does not belong to the specified club or user not found.");
-  }
-
-  await prisma.user.update({
-    where: { id: userId },
-    data: { isAccepted: true }
-  });
-}
