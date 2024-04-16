@@ -1,0 +1,81 @@
+ generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Club {
+  id            Int           @id @default(autoincrement())
+  email         String        @unique
+  password      String
+  name          String        @unique
+  coaches       User[]
+  fighters      Fighter[]
+  competitions  Competition[]
+  createdAt     DateTime      @default(now())
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  password      String
+  name          String
+  clubId        Int
+  club          Club      @relation(fields: [clubId], references: [id])
+  createdAt     DateTime  @default(now())
+}
+
+model Fighter {
+  id                Int       @id @default(autoincrement())
+  firstName         String
+  lastName          String
+  category          String
+  clubId            Int
+  club              Club      @relation(fields: [clubId], references: [id])
+  matches           Match[]
+}
+
+model Competition {
+  id              Int       @id @default(autoincrement())
+  name            String
+  date            DateTime
+  clubId          Int
+  club            Club      @relation(fields: [clubId], references: [id])
+  matches         Match[]
+}
+
+enum RoundVictoryType {
+  PTG // 12 points d'écart
+  GJ  // 5 avertissements
+  SC  // Résultat final
+  KO  // Knockout
+  IN  // Blessure
+  NC  // Non contesté
+  OT  // Autres
+}
+
+model Round {
+  id            Int               @id @default(autoincrement())
+  matchId       Int               // Référence à Match
+  match         Match             @relation(fields: [matchId], references: [id])
+  victoryType   RoundVictoryType? // Type de victoire pour ce round, peut être null si le round n'est pas encore conclu
+  isWinner      Boolean           // true pour victoire, false pour défaite dans ce round
+  scoreBlue         Int             // Score 
+  scoreRed          Int             // Score 
+
+ } 
+
+model Match {
+  id               Int       @id @default(autoincrement())
+  rounds           Round[]
+  fightNumber      Int
+  color            String
+  result           String?   // "WINNER" or "LOSER", optionnel
+  competitionId    Int
+  competition      Competition @relation(fields: [competitionId], references: [id])
+  fighterId        Int
+  fighter          Fighter    @relation(fields: [fighterId], references: [id])
+}
