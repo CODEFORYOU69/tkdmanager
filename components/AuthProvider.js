@@ -13,25 +13,29 @@ export const AuthProvider = ({ children }) => {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const response = await axios.get('/api/verifyToken', {
+                    const response = await fetch('/api/verifyToken', {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }
                     });
-                    if (response.data.isValid) {
+                    
+                    const data = await response.json(); // Get JSON response body
+                    
+                    if (response.ok && data.isValid) {
                         setUser({ token });
                     } else {
-                        logout();  // Logout user if token is invalid
+                        logout(); // Logout user if token is invalid
                     }
                 } catch (error) {
-                    console.error('Token verification failed:', error);
-                    logout();
+                    console.error('Failed to verify token:', error);
+                    logout(); // Logout on any error
                 }
             }
         };
-
+    
         verifyToken();
-    }, []);
+    }, []); // Ensures this effect runs only once after the initial render
+    
 
     const login = (token) => {
         localStorage.setItem('token', token);

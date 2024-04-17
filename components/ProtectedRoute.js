@@ -1,7 +1,7 @@
 // components/ProtectedRoute.js
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../path/to/AuthContext'; // Assurez-vous d'ajuster le chemin
+import { useAuth } from './AuthProvider';
 
 const ProtectedRoute = ({ children }) => {
     const { user } = useAuth();
