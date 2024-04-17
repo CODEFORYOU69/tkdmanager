@@ -118,7 +118,7 @@ export default function CompetitionDayContent() {
                     ))}
                 </List>
             </Drawer>
-            <Button onClick={() => setIsModalOpen(!isModalOpen)}>Filter by Area</Button>
+            
             <Box flex={1} p={2}>
                 <Typography variant="h4" sx={{ marginBottom: 2 }}>Competition Day Viewer</Typography>
                 <Select
@@ -135,7 +135,7 @@ export default function CompetitionDayContent() {
                         </MenuItem>
                     ))}
                 </Select>
-
+                <Button onClick={() => setIsModalOpen(!isModalOpen)}>Filter by Area</Button>
                 <Tabs value={tabValue} onChange={(event, newValue) => setTabValue(newValue)}>
                     <Tab label="Ongoing Matches" />
                     <Tab label="Completed Matches" />
