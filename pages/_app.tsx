@@ -4,9 +4,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import Layout from '../app/layout';
-
 import MobileNavbar from '../components/MobileNavbar';
-
+import { AuthProvider } from '../components/AuthProvider'; // Assurez-vous d'ajuster le chemin
 
 const theme = createTheme({
     palette: {
@@ -23,25 +22,22 @@ const theme = createTheme({
         fontWeight: 600,
       },
     },
-  });
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
-     <SnackbarProvider maxSnack={3}>
-        <Layout>
-      <CssBaseline />
-      <MobileNavbar />
-      <Component {...pageProps} />
-      </Layout>
-    </SnackbarProvider>
+      <SnackbarProvider maxSnack={3}>
+        <AuthProvider> {/* Ajoutez le AuthProvider ici */}
+          <Layout>
+            <CssBaseline />
+            <MobileNavbar />
+            <Component {...pageProps} />
+          </Layout>
+        </AuthProvider>
+      </SnackbarProvider>
     </ThemeProvider>
-
   );
 }
 
 export default MyApp;
-
-
-
-

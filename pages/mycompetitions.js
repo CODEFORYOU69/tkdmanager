@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import ProtectedRoute from '../components/ProtectedRoute';
+
 import { Button, Container, Typography, Select, MenuItem } from '@mui/material';
 import AddFightModal from '../components/AddFightModal';
 

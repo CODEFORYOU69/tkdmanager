@@ -13,6 +13,7 @@ export default async function handler(req, res) {
                     fighter: true, // Assuming a relation exists to include fighter details
                 }
             });
+            console.log("matches", matches);
             res.status(200).json(matches);
         } catch (error) {
             console.error('Error fetching matches:', error);
