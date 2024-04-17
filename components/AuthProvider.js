@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import LoadingWithImage from './LoadingWithImage'; // Assurez-vous que le chemin d'importation est correct
+import axios from 'axios'; // Assurez-vous d'avoir installé axios
 
 const AuthContext = createContext(null);
 
@@ -7,29 +7,29 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);  // Ajoute un état de chargement
 
     useEffect(() => {
         const verifyToken = async () => {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const response = await fetch('/api/verifyToken', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    const data = await response.json();
-
-                    if (response.ok && data.isValid) {
+                    //use fetch
+                     const response = await fetch('/api/verifyToken', {
+                        headers: {
+                             Authorization: `Bearer ${token}`
+                         }
+                     });
+                   console.log(response);
+                    if (response.data.isValid) {
                         setUser({ token });
                     } else {
-                        logout();
+                        logout();  // Logout user if token is invalid
                     }
                 } catch (error) {
                     console.error('Token verification failed:', error);
                     logout();
                 }
             }
-            setLoading(false);  // Termine le chargement après la vérification
         };
 
         verifyToken();
@@ -45,13 +45,9 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
-    if (loading) {
-        return <LoadingWithImage />; // Affiche le loader pendant la vérification
-    }
-
     return (
         <AuthContext.Provider value={{ user, login, logout }}>
-            {user ? children : null} 
+            {children}
         </AuthContext.Provider>
     );
 };
