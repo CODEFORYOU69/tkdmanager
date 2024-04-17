@@ -48,7 +48,8 @@ async function updateMatchResult(matchId) {
             where: {
                 competitionId: match.competitionId,
                 fighterId: match.fighterId,
-                id: { not: matchId }  // Exclude the current match
+                id: { not: matchId },  // Exclude the current match
+                result: {not:'WINNER'}
             },
             data: { isCancelled: true }
         });

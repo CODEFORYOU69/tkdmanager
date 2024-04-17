@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
                             Authorization: `Bearer ${token}`
                         }
                     });
-                    
+                    console.log("response", response)
                     const data = await response.json(); // Get JSON response body
                     
                     if (response.ok && data.isValid) {
