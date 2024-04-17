@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios'; // Assurez-vous d'avoir installé axios
+import LoadingWithImage from './LoadingWithImage'; // Assurez-vous que le chemin d'importation est correct
 
 const AuthContext = createContext(null);
 
@@ -7,6 +7,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);  // Ajoute un état de chargement
 
     useEffect(() => {
         const verifyToken = async () => {
@@ -14,28 +15,25 @@ export const AuthProvider = ({ children }) => {
             if (token) {
                 try {
                     const response = await fetch('/api/verifyToken', {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
+                        headers: { Authorization: `Bearer ${token}` }
                     });
-                    console.log("response", response)
-                    const data = await response.json(); // Get JSON response body
-                    
+                    const data = await response.json();
+
                     if (response.ok && data.isValid) {
                         setUser({ token });
                     } else {
-                        logout(); // Logout user if token is invalid
+                        logout();
                     }
                 } catch (error) {
-                    console.error('Failed to verify token:', error);
-                    logout(); // Logout on any error
+                    console.error('Token verification failed:', error);
+                    logout();
                 }
             }
+            setLoading(false);  // Termine le chargement après la vérification
         };
-    
+
         verifyToken();
-    }, []); // Ensures this effect runs only once after the initial render
-    
+    }, []);
 
     const login = (token) => {
         localStorage.setItem('token', token);
@@ -47,9 +45,13 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
+    if (loading) {
+        return <LoadingWithImage />; // Affiche le loader pendant la vérification
+    }
+
     return (
         <AuthContext.Provider value={{ user, login, logout }}>
-            {children}
+            {user ? children : null} 
         </AuthContext.Provider>
     );
 };
