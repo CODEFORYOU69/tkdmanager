@@ -7,8 +7,7 @@ const AddFightModal = ({ open, onClose, competitionId }) => {
     const [fights, setFights] = useState([{ fightNumber: '', color: '' }]);
     const [fighters, setFighters] = useState([]);
     const [selectedFighterId, setSelectedFighterId] = useState('');
-    console.log("selectedFighterId", selectedFighterId);
-    console.log("fights", fights);
+
 
     useEffect(() => {
         fetch('/api/fighters')

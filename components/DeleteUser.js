@@ -2,7 +2,6 @@ import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 
 const DeleteUser = ({ coach, open, onClose }) => {
-    console.log("coach", coach)
   const handleDelete = async () => {
     const response = await fetch(`/api/users/${coach.id}`, {
       method: 'DELETE'

@@ -4,7 +4,6 @@ const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
     const coachId = parseInt(req.query.id); // Convertir l'ID en nombre pour éviter des erreurs
-    console.log("coachId", coachId);
 
     switch (req.method) {
         case 'GET':

@@ -8,7 +8,6 @@ export default function handler(req, res) {
     }
 
     const token = authorization.split(' ')[1]; // Assuming "Bearer [token]" format
-    console.log("token", token);
     if (!token) {
         return res.status(401).json({ message: 'No token provided' });
     }
@@ -16,7 +15,6 @@ export default function handler(req, res) {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         // Optionally check other things here (e.g., token expiry handled automatically)
-        console.log('Token verification succeeded:', decoded);
         
         res.status(200).json({ isValid: true });
     } catch (error) {

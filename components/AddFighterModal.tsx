@@ -9,7 +9,6 @@ const AddFighterModal = ({ open, handleClose }: { open: boolean, handleClose: ()
 
     const handleSave = async () => {
         const token = localStorage.getItem('token'); // Récupérer l'ID du club stocké
-console.log("token", token);
         const response = await fetch('/api/fighters/add', {
           method: 'POST',
           headers: {
@@ -24,7 +23,6 @@ console.log("token", token);
         });
       
         if (response.ok) {
-          console.log('Fighter added successfully');
           handleClose(); // Fermer la modale après l'ajout
         } else {
           console.error('Failed to add fighter');

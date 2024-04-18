@@ -11,12 +11,10 @@ export default async function handler(
     const { email, password } = req.body;
     try {
       let account = await authenticateUser(email, password);
-      console.log("account user",account);
       let role = "user";  // Définir le rôle par défaut comme utilisateur
 
       if (!account) {
         let account2 = await authenticateClub(email, password);
-        console.log("account club",account2);
         role = "club";  // Changer le rôle si c'est un club qui est authentifié
         if (!account2) {
           return res.status(401).json({ message: 'Invalid credentials or account not accepted' });
@@ -31,7 +29,6 @@ export default async function handler(
           process.env.JWT_SECRET as string,
           { expiresIn: '1h' }
         );
-  console.log("token", token)
         // Retourner le token et les informations pertinentes
         res.status(200).json({
           token,

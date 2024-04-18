@@ -23,7 +23,6 @@ const AddCompetitionModal = ({ open, handleClose }: { open: boolean, handleClose
         });
       
         if (response.ok) {
-          console.log('Competition added successfully');
           handleClose(); // Fermer la modale après l'ajout
         } else {
           console.error('Failed to add competition');

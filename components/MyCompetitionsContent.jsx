@@ -13,7 +13,6 @@ const MyCompetitionsContent = () => {
             .then(setCompetitions)
             .catch(error => console.error('Error fetching competitions:', error));
     }, []);
-    console.log("competitions", competitions);
 
     const handleSelectCompetition = (event) => {
         const competitionId = event.target.value;

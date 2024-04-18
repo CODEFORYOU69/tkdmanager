@@ -21,7 +21,6 @@ export const AuthProvider = ({ children }) => {
                      });
                      const data = await response.json();
                     if (response.ok && data.isValid) {
-                        console.log("data", data);
 
                         setUser({ token });
                     } else {

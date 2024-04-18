@@ -8,9 +8,7 @@ const prisma = new PrismaClient();
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { firstName, lastName, category } = req.body;
-        console.log({ firstName, lastName, category });
         const token = req.headers.authorization?.split(' ')[1];
-        console.log("token", token);
         if (!token) {
             return res.status(401).json({ message: "Unauthorized" });
         }
