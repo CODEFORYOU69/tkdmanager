@@ -8,9 +8,10 @@ const ProtectedRoute = ({ children }) => {
     const router = useRouter();
 
     useEffect(() => {
+        
         if (!user) {
             // Redirige vers la page de login si l'utilisateur n'est pas connecté
-            router.push('/login');
+            router.push('/');
         }
     }, [user, router]);
 

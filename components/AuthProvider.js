@@ -19,8 +19,10 @@ export const AuthProvider = ({ children }) => {
                              Authorization: `Bearer ${token}`
                          }
                      });
-                   console.log(response);
-                    if (response.data.isValid) {
+                     const data = await response.json();
+                    if (response.ok && data.isValid) {
+                        console.log("data", data);
+
                         setUser({ token });
                     } else {
                         logout();  // Logout user if token is invalid

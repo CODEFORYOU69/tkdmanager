@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
       <SnackbarProvider maxSnack={3}>
-        <AuthProvider> {/* Ajoutez le AuthProvider ici */}
+        <AuthProvider> 
           <Layout>
             <CssBaseline />
             <MobileNavbar />

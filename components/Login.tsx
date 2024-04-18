@@ -21,9 +21,7 @@ const Login: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials)
       });
-      console.log("login ok")
       const data = await response.json();
-      console.log("data", data);
       if (response.ok) {
         localStorage.setItem('token', data.token);
         // Save the JWT in localStorage
