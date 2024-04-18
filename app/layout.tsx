@@ -1,8 +1,6 @@
 // app/layout.tsx
-import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Layout({
   children,
@@ -10,6 +8,6 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className={inter.className}>{children}</div>
+    <div >{children}</div>
   );
 }
