@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios'; // Assurez-vous d'avoir installé axios
+import LoadingWithImage from './LoadingWithImage'; // Assurez-vous que le chemin d'importation est correct
 
 const AuthContext = createContext(null);
 
@@ -7,44 +7,38 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);  // Ajoute un état de chargement
 
-    useEffect(() => {
-        const verifyToken = async () => {
-            const token = localStorage.getItem('token');
-            if (token) {
-                try {
-                    //use fetch
-                     const response = await fetch('/api/verifyToken', {
-                        headers: {
-                             Authorization: `Bearer ${token}`
-                         }
-                     });
-                     const data = await response.json();
-                    if (response.ok && data.isValid) {
-
-                        setUser({ token });
-                    } else {
-                        logout();  // Logout user if token is invalid
-                    }
-                } catch (error) {
-                    console.error('Token verification failed:', error);
-                    logout();
-                }
-            }
+        // Fonction pour simuler la connexion
+        const login = (token) => {
+            localStorage.setItem('token', token);
+            setUser({ token });
+            setLoading(false);
+        };
+    
+        // Fonction pour simuler la déconnexion
+        const logout = () => {
+            localStorage.removeItem('token');
+            setUser(null);
+            setLoading(false);
         };
 
-        verifyToken();
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            // Supposons que cela simule un appel réseau pour valider le token
+            setTimeout(() => {
+                setUser({ token });
+                setLoading(false);
+            }, 1000); // Delai pour simuler l'appel réseau
+        } else {
+            setLoading(false);
+        }
     }, []);
 
-    const login = (token) => {
-        localStorage.setItem('token', token);
-        setUser({ token });
-    };
-
-    const logout = () => {
-        localStorage.removeItem('token');
-        setUser(null);
-    };
+    if (loading) {
+        return <LoadingWithImage />; // Affiche le loader pendant la vérification du token
+    }
 
     return (
         <AuthContext.Provider value={{ user, login, logout }}>
