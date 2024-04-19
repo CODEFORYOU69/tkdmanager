@@ -43,13 +43,36 @@ useEffect(() => {
 
 
 
-console.log("")
-    useEffect(() => {
-        fetch('/api/competitions')
-            .then(res => res.json())
-            .then(setCompetitions)
-            .catch(err => console.error('Error fetching competitions:', err));
-    }, []);
+useEffect(() => {
+    const fetchData = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No token found');
+            return;
+        }
+
+        // Assurez-vous que l'endpoint '/api/competitions' est correct et configuré pour utiliser l'authentification.
+        fetch('/api/competitions', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setCompetitions(data);
+        })
+        .catch(error => {
+            console.error('Error fetching competitions:', error.message);
+        });
+    };
+
+    fetchData();
+}, []);
 
     useEffect(() => {
         if (selectedCompetition) {

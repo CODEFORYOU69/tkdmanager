@@ -9,12 +9,37 @@ const AddFightModal = ({ open, onClose, competitionId }) => {
     const [selectedFighterId, setSelectedFighterId] = useState('');
 
 
+    const fetchData = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No token found');
+            return;
+        }
+    
+        // Remarque : Assurez-vous que l'endpoint accepte clubId en tant que paramètre de requête si nécessaire
+        // ou ajustez en fonction des besoins réels de votre application.
+        fetch('/api/fighters', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setFighters(data);
+        })
+        .catch(error => {
+            console.error('Error fetching fighters:', error.message);
+        });
+    };
+
     useEffect(() => {
-        fetch('/api/fighters')
-            .then(response => response.json())
-            .then(setFighters)
-            .catch(error => console.error('Error fetching fighters:', error));
-    }, []);
+        fetchData();
+      }, []);
 
     const handleSave = async () => {
         if (!selectedFighterId) {
