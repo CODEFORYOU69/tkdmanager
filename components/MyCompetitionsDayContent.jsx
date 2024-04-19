@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Select, MenuItem, Button, Tabs, Tab, Box, Paper, Drawer, List, ListItem, ListItemText } from '@mui/material';
+import { Container, Typography, Select, MenuItem, Button, Tabs, Tab, Box, Paper, Drawer, List, ListItem, ListItemText, TextField } from '@mui/material';
 import AddRoundModal from './AddRoundModal';
 
 export default function CompetitionDayContent() {
@@ -13,7 +13,35 @@ export default function CompetitionDayContent() {
     const [completedMatches, setCompletedMatches] = useState([]);
     const [filteredMatches, setFilteredMatches] = useState([]);
     const [roundData, setRoundData] = useState({});
+    const [currentFightNumber, setCurrentFightNumber] = useState({});
+    const [remainingFightsByArea, setRemainingFightsByArea] = useState({});
+const [duplicateFights, setDuplicateFights] = useState(new Set());
 
+useEffect(() => {
+    const newRemainingFights = {};
+    Object.keys(ongoingMatches).forEach(area => {
+        newRemainingFights[area] = calculateRemainingFights(area);
+    });
+    setRemainingFightsByArea(newRemainingFights);
+
+    // Détecter les doublons
+    const counts = {};
+    Object.values(newRemainingFights).forEach(fight => {
+        counts[fight] = (counts[fight] || 0) + 1;
+    });
+    const newDuplicates = new Set();
+    Object.entries(counts).forEach(([fight, count]) => {
+        if (count > 1) newDuplicates.add(parseInt(fight));
+    });
+    setDuplicateFights(newDuplicates);
+
+}, [ongoingMatches, currentFightNumber]);
+
+
+
+
+
+console.log("")
     useEffect(() => {
         fetch('/api/competitions')
             .then(res => res.json())
@@ -29,15 +57,24 @@ export default function CompetitionDayContent() {
                     const sortedMatches = data.sort((a, b) => a.fightNumber - b.fightNumber);
                     const ongoing = {};
                     const completed = [];
+
                     
                     sortedMatches.forEach(match => {
                         const area = Math.floor(match.fightNumber / 100).toString();
+                        
                         if (!match.result && !match.isCancelled) {
                             if (!ongoing[area]) ongoing[area] = [];
                             ongoing[area].push(match);
                         }
                         if (match.result && !match.isCancelled) {
                             completed.push(match);
+                            // Mettre à jour le dernier combat terminé pour chaque aire
+                            currentFightNumber[area] = match.fightNumber + 1;
+                        }
+    
+                        // Définir les valeurs par défaut si aucun combat n'est complété dans une aire
+                        if (!currentFightNumber[area]) {
+                            currentFightNumber[area] = parseInt(area) * 100 + 1;
                         }
                     });
     
@@ -75,6 +112,23 @@ export default function CompetitionDayContent() {
                 .catch(err => console.error('Error fetching all rounds:', err));
         }
     }, [completedMatches]);
+
+    const handleCurrentFightChange = (area, value) => {
+        setCurrentFightNumber(prev => ({ ...prev, [area]: value }));
+    };
+
+    const calculateRemainingFights = (area) => {
+        if (!currentFightNumber[area] || !ongoingMatches[area]) return 0; // Renvoie 0 si aucun combat actuel n'est défini ou si aucun combat n'est en cours pour l'aire
+    
+        // Trouver le prochain numéro de combat après le combat actuel
+        const nextFightIndex = ongoingMatches[area].findIndex(match => match.fightNumber > currentFightNumber[area]);
+    
+        if (nextFightIndex === -1) return 0; // Renvoie 0 si aucun combat futur n'est trouvé
+    
+        // Calcul du nombre de combats entre le combat actuel et le prochain combat enregistré
+        const nextFightNumber = ongoingMatches[area][nextFightIndex].fightNumber;
+        return nextFightNumber - currentFightNumber[area];
+    };
 
     const handleCompetitionChange = (event) => {
         const competition = competitions.find(c => c.id === event.target.value);
@@ -114,6 +168,18 @@ export default function CompetitionDayContent() {
                     {Object.keys(ongoingMatches).map(area => (
                         <ListItem button key={area} onClick={() => handleAreaChange(area)}>
                             <ListItemText primary={`Aire ${area}`} />
+                            <Box key={area}>
+                    <TextField
+                        label={`Current fight in Area ${area}`}
+                        type="number"
+                        value={currentFightNumber[area] || ''}
+                        onChange={(e) => handleCurrentFightChange(area, parseInt(e.target.value))}
+                        sx={{ margin: 1 }}
+                    />
+                   <Typography sx={{ color: duplicateFights.has(remainingFightsByArea[area]) ? 'red' : 'inherit' }}>
+            Remaining Fights in Area {area}: {remainingFightsByArea[area]} fights
+        </Typography>
+                </Box>
                         </ListItem>
                     ))}
                 </List>

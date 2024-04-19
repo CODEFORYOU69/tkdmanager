@@ -46,7 +46,13 @@ const HomePage = () => {
           TKD Manager
         </Typography>
         <Box sx={{ width: 300, height: 300, position: 'relative' }}>
-          <Image src="/tkdmanager.jpeg" alt="TKD Manager Image" layout="fill" objectFit="contain" priority />
+          <Image 
+          src="/tkdmanager.jpeg" 
+          alt="TKD Manager Image" 
+          style={{ objectFit: 'cover' }}
+          fill 
+          sizes='(max-width: 300px) 100vw, 300px'
+          priority />
         </Box>
         <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
           <Button variant="contained" color="primary" onClick={handleSignInClick}>Sign In</Button>
