@@ -15,15 +15,37 @@ const MyCoachesContent = () => {
   const [loading, setLoading] = useState(true);
 
 
+
   const fetchData = () => {
     setTimeout(() => {
       setLoading(false);
     }, 500);
-    fetch('/api/users')
-      .then(response => response.json())
-      .then(data => setCoaches(data))
-      .catch(error => console.error('Error fetching coaches:', error));
-  };
+    const token = localStorage.getItem('token');
+    if (!token) {
+        console.error('No token found');
+        return;
+    }
+
+    // Remarque : Assurez-vous que l'endpoint accepte clubId en tant que paramètre de requête si nécessaire
+    // ou ajustez en fonction des besoins réels de votre application.
+    fetch('/api/users', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        setCoaches(data);
+    })
+    .catch(error => {
+        console.error('Error fetching coachs:', error.message);
+    });
+};
 
   useEffect(() => {
     fetchData();

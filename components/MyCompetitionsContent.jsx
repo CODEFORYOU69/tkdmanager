@@ -8,12 +8,39 @@ const MyCompetitionsContent = () => {
     const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
-        fetch('/api/competitions')
-            .then(response => response.json())
-            .then(setCompetitions)
-            .catch(error => console.error('Error fetching competitions:', error));
+        const fetchData = () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('No token found');
+                return;
+            }
+
+            // Assurez-vous que l'endpoint '/api/competitions' est correct et configuré pour utiliser l'authentification.
+            fetch('/api/competitions', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setCompetitions(data);
+            })
+            .catch(error => {
+                console.error('Error fetching competitions:', error.message);
+            });
+        };
+
+        fetchData();
     }, []);
 
+
+  
+    
     const handleSelectCompetition = (event) => {
         const competitionId = event.target.value;
         const competition = competitions.find(c => c.id === competitionId);
