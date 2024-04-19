@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Container, Typography, Select, MenuItem, Button, Tabs, Tab, Box, Paper, Drawer, List, ListItem, ListItemText, TextField } from '@mui/material';
 import AddRoundModal from './AddRoundModal';
 
@@ -15,7 +15,9 @@ export default function CompetitionDayContent() {
     const [roundData, setRoundData] = useState({});
     const [currentFightNumber, setCurrentFightNumber] = useState({});
     const [remainingFightsByArea, setRemainingFightsByArea] = useState({});
-const [duplicateFights, setDuplicateFights] = useState(new Set());
+    const [duplicateFights, setDuplicateFights] = useState(new Set());
+    const [roundSavedData, setRoundSavedData] = useState([]);
+
 
 useEffect(() => {
     const newRemainingFights = {};
@@ -107,11 +109,45 @@ console.log("")
                         acc[result.matchId] = result.rounds;
                         return acc;
                     }, {});
+                    console.log("roundData", roundsByMatch)
+
                     setRoundData(roundsByMatch);
                 })
                 .catch(err => console.error('Error fetching all rounds:', err));
         }
     }, [completedMatches]);
+    // fetch all rounds for each match in ongoingMatches
+    useEffect(() => {
+        const ongoingMatchIds = Object.values(ongoingMatches).flat().map(match => match.id);
+        if (ongoingMatchIds.length > 0) {
+            const fetchRoundsPromises = ongoingMatchIds.map(matchId =>
+                fetch(`/api/rounds/getRound?matchId=${matchId}`)
+                .then(res => res.json())
+                .then(data => ({ matchId, rounds: data }))
+                .catch(err => {
+                    console.error(`Error fetching rounds for match ${matchId}:`, err);
+                    return { matchId, rounds: [] };
+                })
+            );
+    
+            Promise.all(fetchRoundsPromises)
+            .then(results => {
+                const newRoundSavedData = {};
+                results.forEach(result => {
+                    newRoundSavedData[result.matchId] = result.rounds;
+                });
+                console.log("newRoundSavedData", newRoundSavedData);
+                setRoundSavedData(newRoundSavedData);
+            })
+            .catch(err => console.error('Error fetching all rounds:', err));
+        }
+    }, [ongoingMatches]);  // Cette dépendance devrait être suffisante pour rafraîchir les données lors des changements
+    
+
+    // setRoundSavedData(roundData); to display the number of round saved for each match in ongoing match
+
+    
+
 
     const handleCurrentFightChange = (area, value) => {
         setCurrentFightNumber(prev => ({ ...prev, [area]: value }));
@@ -210,8 +246,11 @@ console.log("")
                 {tabValue === 0 && filteredMatches.map(match => (
                     <Paper key={match.id} sx={{ backgroundColor: match.color, padding: 2, marginBottom: 1, color: 'white' }}>
                         <Typography variant="body1">
-                            Fight #{match.fightNumber} - {match.fighter.firstName} {match.fighter.lastName}
+                            Fight #{match.fightNumber} - {match.fighter.firstName} {match.fighter.lastName} 
                         </Typography>
+                        <Typography variant="body1" gutterBottom>
+            Rounds Recorded: {roundSavedData[match.id] ? roundSavedData[match.id].length : 0}
+        </Typography>
                         <Button onClick={() => openModal(match)}>Manage Rounds</Button>
                     </Paper>
                 ))}
@@ -224,19 +263,32 @@ console.log("")
                         <Typography variant="subtitle1" gutterBottom>
                             Result: {match.result}
                         </Typography>
-                        {roundData[match.id]?.map(round => (
-                            <Box key={round.id} sx={{ paddingLeft: 2, paddingTop: 1 }}>
-                                <Typography variant="body2">
-                                    Round Score: Blue {round.scoreBlue} - Red {round.scoreRed}
-                                </Typography>
-                                <Typography variant="body2">
-                                    Victory Type: {round.victoryType || 'N/A'}
-                                </Typography>
-                                <Typography variant="body2">
-                                    Result: {round.isWinner ? 'Winner' : 'Loser'}
-                                </Typography>
-                            </Box>
-                        ))}
+                        {Array.isArray(roundData[match.id]) ? 
+    roundData[match.id].map(round => (
+        <Box key={round.id} sx={{ paddingLeft: 2, paddingTop: 1 }}>
+            <Typography variant="body2">
+                Round Score: Blue {round.scoreBlue} - Red {round.scoreRed}
+            </Typography>
+            <Typography variant="body2">
+                Victory Type: {round.victoryType || 'N/A'}
+            </Typography>
+            <Typography variant="body2">
+                Result: {round.isWinner ? 'Winner' : 'Loser'}
+            </Typography>
+        </Box>
+    )) :
+    <Box sx={{ paddingLeft: 2, paddingTop: 1 }}>
+        <Typography variant="body2">
+            Round Score: Blue {roundData[match.id]?.scoreBlue} - Red {roundData[match.id]?.scoreRed}
+        </Typography>
+        <Typography variant="body2">
+            Victory Type: {roundData[match.id]?.victoryType || 'N/A'}
+        </Typography>
+        <Typography variant="body2">
+            Result: {roundData[match.id]?.isWinner ? 'Winner' : 'Loser'}
+        </Typography>
+    </Box>
+}
                     </Paper>
                 ))}
 

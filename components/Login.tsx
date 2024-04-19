@@ -14,6 +14,8 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
+    //remove token from localstorage
+    localStorage.removeItem('token');
     event.preventDefault();
     try {
       const response = await fetch('/api/login', {
