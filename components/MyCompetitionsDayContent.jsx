@@ -82,8 +82,9 @@ useEffect(() => {
                 const sortedMatches = data.sort((a, b) => a.fightNumber - b.fightNumber);
                 const ongoing = {};
                 const completed = [];
-console.log("sortedMatches", sortedMatches)
-console.log("ongoing", ongoing)
+console.log("sortedMatches", sortedMatches);
+console.log("ongoing", ongoing);
+console.log("completed", completed);
                 sortedMatches.forEach(match => {
                     const area = Math.floor(match.fightNumber / 100).toString();
                     console.log("area", area);  
