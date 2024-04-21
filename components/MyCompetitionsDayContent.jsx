@@ -86,14 +86,17 @@ useEffect(() => {
                 sortedMatches.forEach(match => {
                     const area = Math.floor(match.fightNumber / 100).toString();
                     
-                    if (!match.result && !match.isCancelled) {
+                    if (match.result === null && !match.isCancelled) {
                         if (!ongoing[area]) ongoing[area] = [];
                         ongoing[area].push(match);
                     }
-                    if (match.result && !match.isCancelled) {
+                    // Ajoutez des matches aux matches complétés si le résultat n'est pas nul et n'est pas annulé
+                    if (match.result !== null && !match.isCancelled) {
                         completed.push(match);
+                        // Mettre à jour le dernier combat terminé pour chaque aire
                         currentFightNumber[area] = match.fightNumber + 1;
                     }
+
                     if (!currentFightNumber[area]) {
                         currentFightNumber[area] = parseInt(area) * 100 + 1;
                     }
