@@ -31,34 +31,46 @@ async function updateMatchResult(matchId) {
     const rounds = await prisma.round.findMany({
         where: { matchId }
     });
-
-    const match = await prisma.match.findUnique({
-        where: { id: matchId },
-        include: { fighter: true }
-    });
-
     const wins = rounds.filter(round => round.isWinner).length;
-    let result;
+    let result = '';
+
+    // Déterminer le résultat basé sur le nombre de victoires
     if (wins >= 2) {
         result = 'WINNER';
-    } else if (rounds.length === 2 && wins === 0 || rounds.length === 3 && wins === 1) {
+    } else if ((rounds.length === 2 && wins === 0) || (rounds.length === 3 && wins === 1)) {
         result = 'LOSER';
-        // Cancel all future matches if the fighter loses the match
-        await prisma.match.updateMany({
-            where: {
-                competitionId: match.competitionId,
-                fighterId: match.fighterId,
-                id: { not: matchId },  // Exclude the current match
-                result: {not:'WINNER' || ''}
-            },
-            data: { isCancelled: true }
-        });
     } else {
-        return; // Not enough data to determine the result yet
+        // Pas assez de données pour déterminer le résultat
+        return;
     }
 
+    // Mise à jour du match avec le résultat
     await prisma.match.update({
         where: { id: matchId },
         data: { result }
     });
+
+    if (result === 'LOSER') {
+        // Récupérer les détails du match pour trouver les futurs matchs du même combattant
+        const match = await prisma.match.findUnique({
+            where: { id: matchId },
+            include: { fighter: true }
+        });
+
+        // Annuler tous les futurs matchs si le combattant perd
+        await prisma.match.updateMany({
+            where: {
+                competitionId: match.competitionId,
+                fighterId: match.fighterId,
+                id: { not: matchId },  // Exclure le match actuel
+                // Exclure les matchs où le résultat est déjà 'WINNER' ou non défini
+                OR: [
+                    { result: null },
+                    { result: { not: 'WINNER' } }
+                ]
+            },
+            data: { isCancelled: true }
+        });
+    }
 }
+

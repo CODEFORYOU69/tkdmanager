@@ -15,6 +15,7 @@ export default async function handler(
 
       if (!account) {
         let account2 = await authenticateClub(email, password);
+        console.log("account2", account2);
         role = "club";  // Changer le rôle si c'est un club qui est authentifié
         if (!account2) {
           return res.status(401).json({ message: 'Invalid credentials or account not accepted' });

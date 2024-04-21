@@ -14,6 +14,7 @@ export default async function handler(req, res) {
             const rounds = await prisma.round.findMany({
                 where: {
                     matchId: parseInt(matchId),
+                  
                 },
             });
 

@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
             setTimeout(() => {
                 setUser({ token });
                 setLoading(false);
-            }, 2000); // Delai pour simuler l'appel réseau
+            }, 3000); // Delai pour simuler l'appel réseau
         } else {
             setLoading(false);
         }

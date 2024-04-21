@@ -74,43 +74,55 @@ useEffect(() => {
     fetchData();
 }, []);
 
-    useEffect(() => {
-        if (selectedCompetition) {
-            fetch(`/api/match?competitionId=${selectedCompetition.id}`)
-                .then(res => res.json())
-                .then(data => {
-                    const sortedMatches = data.sort((a, b) => a.fightNumber - b.fightNumber);
-                    const ongoing = {};
-                    const completed = [];
+useEffect(() => {
+    if (selectedCompetition) {
+        fetch(`/api/match?competitionId=${selectedCompetition.id}`)
+            .then(res => res.json())
+            .then(data => {
+                const sortedMatches = data.sort((a, b) => a.fightNumber - b.fightNumber);
+                const ongoing = {};
+                const completed = [];
 
+                sortedMatches.forEach(match => {
+                    const area = Math.floor(match.fightNumber / 100).toString();
                     
-                    sortedMatches.forEach(match => {
-                        const area = Math.floor(match.fightNumber / 100).toString();
-                        
-                        if (!match.result && !match.isCancelled) {
-                            if (!ongoing[area]) ongoing[area] = [];
-                            ongoing[area].push(match);
-                        }
-                        if (match.result && !match.isCancelled) {
-                            completed.push(match);
-                            // Mettre à jour le dernier combat terminé pour chaque aire
-                            currentFightNumber[area] = match.fightNumber + 1;
-                        }
-    
-                        // Définir les valeurs par défaut si aucun combat n'est complété dans une aire
-                        if (!currentFightNumber[area]) {
-                            currentFightNumber[area] = parseInt(area) * 100 + 1;
-                        }
-                    });
-    
-                    setMatches(sortedMatches);
-                    setOngoingMatches(ongoing);
-                    setCompletedMatches(completed);
-                    setFilteredMatches(Object.values(ongoing).flat());
-                })
-                .catch(err => console.error('Error fetching matches:', err));
+                    if (!match.result && !match.isCancelled) {
+                        if (!ongoing[area]) ongoing[area] = [];
+                        ongoing[area].push(match);
+                    }
+                    if (match.result && !match.isCancelled) {
+                        completed.push(match);
+                        currentFightNumber[area] = match.fightNumber + 1;
+                    }
+                    if (!currentFightNumber[area]) {
+                        currentFightNumber[area] = parseInt(area) * 100 + 1;
+                    }
+                });
+
+                // Fusionner et trier tous les combats en cours
+                const allOngoingMatches = Object.values(ongoing).flat();
+                const customSortedMatches = customSortMatches(allOngoingMatches);
+                setFilteredMatches(customSortedMatches);
+
+                setMatches(sortedMatches);
+                setOngoingMatches(ongoing);
+                setCompletedMatches(completed);
+            })
+            .catch(err => console.error('Error fetching matches:', err));
+    }
+}, [selectedCompetition]);
+
+const customSortMatches = (matches) => {
+    return matches.sort((a, b) => {
+        const lastTwoDigitsA = a.fightNumber % 100;
+        const lastTwoDigitsB = b.fightNumber % 100;
+        if (lastTwoDigitsA !== lastTwoDigitsB) {
+            return lastTwoDigitsA - lastTwoDigitsB;
         }
-    }, [selectedCompetition]);
+        return Math.floor(a.fightNumber / 100) - Math.floor(b.fightNumber / 100);
+    });
+};
+
 
     useEffect(() => {
         if (completedMatches.length > 0) {
