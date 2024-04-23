@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Club {
-  id            Int           @id @default(autoincrement())
+  id            Int           @id @default(autoincrement()) @unique
   email         String        @unique
   password      String
   name          String        @unique
@@ -16,16 +16,20 @@ model Club {
   fighters      Fighter[]
   competitions  Competition[]
   createdAt     DateTime      @default(now())
+  image         String?  // Image URL, nullable
+
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
+  id            Int       @id @default(autoincrement()) @unique
   email         String    @unique
   password      String
   name          String
   clubId        Int
   club          Club      @relation(fields: [clubId], references: [id])
   createdAt     DateTime  @default(now())
+  image         String?  // Image URL, nullable
+
 }
 
 model Fighter {
@@ -36,6 +40,8 @@ model Fighter {
   clubId            Int
   club              Club      @relation(fields: [clubId], references: [id])
   matches           Match[]
+  image             String?  // Image URL, nullable
+
 }
 
 model Competition {

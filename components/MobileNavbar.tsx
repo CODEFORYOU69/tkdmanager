@@ -61,6 +61,8 @@ const MobileNavbar: React.FC = () => {
           open={open}
           onClose={handleClose}
         >
+          <Link href="/"><MenuItem onClick={handleClose}>Home</MenuItem></Link>
+          <Link href="/profile"><MenuItem onClick={handleClose}>Profile</MenuItem></Link>
           <Link href="/dashboard"><MenuItem onClick={handleClose}>Dashboard</MenuItem></Link>
           <Link href="/my-coaches"><MenuItem onClick={handleClose}>Coach</MenuItem></Link>
           <Link href="/my-fighters"><MenuItem onClick={handleClose}>Fighter</MenuItem></Link>

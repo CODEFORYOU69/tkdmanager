@@ -26,6 +26,7 @@ const Login: React.FC = () => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('role', JSON.stringify(data.account.role));
         // Save the JWT in localStorage
         router.push('/dashboard');  // Redirect to a protected page
       } else {
