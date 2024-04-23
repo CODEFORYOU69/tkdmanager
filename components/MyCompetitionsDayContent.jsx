@@ -1,5 +1,5 @@
 import React, { useState, useEffect, use } from 'react';
-import { Container, Typography, Select, MenuItem, Button, Tabs, Tab, Box, Paper, Drawer, List, ListItem, ListItemText, TextField } from '@mui/material';
+import { Container, Typography, Select, MenuItem, Button, Tabs, Tab, Box, Paper, Drawer, List, ListItem, ListItemText, TextField, Avatar } from '@mui/material';
 import AddRoundModal from './AddRoundModal';
 
 export default function CompetitionDayContent() {
@@ -19,131 +19,131 @@ export default function CompetitionDayContent() {
     const [roundSavedData, setRoundSavedData] = useState([]);
 
 
-useEffect(() => {
-    const newRemainingFights = {};
-    Object.keys(ongoingMatches).forEach(area => {
-        newRemainingFights[area] = calculateRemainingFights(area);
-    });
-    setRemainingFightsByArea(newRemainingFights);
+    useEffect(() => {
+        const newRemainingFights = {};
+        Object.keys(ongoingMatches).forEach(area => {
+            newRemainingFights[area] = calculateRemainingFights(area);
+        });
+        setRemainingFightsByArea(newRemainingFights);
 
-    // Détecter les doublons
-    const counts = {};
-    Object.values(newRemainingFights).forEach(fight => {
-        counts[fight] = (counts[fight] || 0) + 1;
-    });
-    const newDuplicates = new Set();
-    Object.entries(counts).forEach(([fight, count]) => {
-        if (count > 1) newDuplicates.add(parseInt(fight));
-    });
-    setDuplicateFights(newDuplicates);
+        // Détecter les doublons
+        const counts = {};
+        Object.values(newRemainingFights).forEach(fight => {
+            counts[fight] = (counts[fight] || 0) + 1;
+        });
+        const newDuplicates = new Set();
+        Object.entries(counts).forEach(([fight, count]) => {
+            if (count > 1) newDuplicates.add(parseInt(fight));
+        });
+        setDuplicateFights(newDuplicates);
 
-}, [ongoingMatches, currentFightNumber]);
-
-
+    }, [ongoingMatches, currentFightNumber]);
 
 
 
-useEffect(() => {
-    const fetchData = () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            console.error('No token found');
-            return;
+
+
+    useEffect(() => {
+        const fetchData = () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('No token found');
+                return;
+            }
+
+            // Assurez-vous que l'endpoint '/api/competitions' est correct et configuré pour utiliser l'authentification.
+            fetch('/api/competitions', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    setCompetitions(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching competitions:', error.message);
+                });
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (selectedCompetition) {
+            fetch(`/api/match?competitionId=${selectedCompetition.id}`)
+                .then(res => res.json())
+                .then(data => {
+                    const sortedMatches = data.sort((a, b) => a.fightNumber - b.fightNumber);
+                    const ongoing = {};
+                    const completed = [];
+                    console.log("sortedMatches", sortedMatches);
+                    console.log("ongoing", ongoing);
+                    console.log("completed", completed);
+                    sortedMatches.forEach(match => {
+                        const area = Math.floor(match.fightNumber / 100).toString();
+                        console.log("area", area);
+
+                        if (match.result === null && !match.isCancelled) {
+                            if (!ongoing[area]) ongoing[area] = [];
+                            ongoing[area].push(match);
+                        }
+                        // Ajoutez des matches aux matches complétés si le résultat n'est pas nul et n'est pas annulé
+                        if (match.result !== null && !match.isCancelled) {
+                            completed.push(match);
+                            // Mettre à jour le dernier combat terminé pour chaque aire
+                            currentFightNumber[area] = match.fightNumber + 1;
+                        }
+
+                        if (!currentFightNumber[area]) {
+                            currentFightNumber[area] = parseInt(area) * 100 + 1;
+                        }
+                    });
+
+                    // Fusionner et trier tous les combats en cours
+                    const allOngoingMatches = Object.values(ongoing).flat();
+                    const customSortedMatches = customSortMatches(allOngoingMatches);
+                    setFilteredMatches(customSortedMatches);
+
+                    setMatches(sortedMatches);
+                    setOngoingMatches(ongoing);
+                    setCompletedMatches(completed);
+                })
+                .catch(err => console.error('Error fetching matches:', err));
         }
+    }, [selectedCompetition]);
 
-        // Assurez-vous que l'endpoint '/api/competitions' est correct et configuré pour utiliser l'authentification.
-        fetch('/api/competitions', {
-            headers: {
-                'Authorization': `Bearer ${token}`
+    const customSortMatches = (matches) => {
+        return matches.sort((a, b) => {
+            const lastTwoDigitsA = a.fightNumber % 100;
+            const lastTwoDigitsB = b.fightNumber % 100;
+            if (lastTwoDigitsA !== lastTwoDigitsB) {
+                return lastTwoDigitsA - lastTwoDigitsB;
             }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            setCompetitions(data);
-        })
-        .catch(error => {
-            console.error('Error fetching competitions:', error.message);
+            return Math.floor(a.fightNumber / 100) - Math.floor(b.fightNumber / 100);
         });
     };
-
-    fetchData();
-}, []);
-
-useEffect(() => {
-    if (selectedCompetition) {
-        fetch(`/api/match?competitionId=${selectedCompetition.id}`)
-            .then(res => res.json())
-            .then(data => {
-                const sortedMatches = data.sort((a, b) => a.fightNumber - b.fightNumber);
-                const ongoing = {};
-                const completed = [];
-console.log("sortedMatches", sortedMatches);
-console.log("ongoing", ongoing);
-console.log("completed", completed);
-                sortedMatches.forEach(match => {
-                    const area = Math.floor(match.fightNumber / 100).toString();
-                    console.log("area", area);  
-
-                    if (match.result === null && !match.isCancelled) {
-                        if (!ongoing[area]) ongoing[area] = [];
-                        ongoing[area].push(match);
-                    }
-                    // Ajoutez des matches aux matches complétés si le résultat n'est pas nul et n'est pas annulé
-                    if (match.result !== null && !match.isCancelled) {
-                        completed.push(match);
-                        // Mettre à jour le dernier combat terminé pour chaque aire
-                        currentFightNumber[area] = match.fightNumber + 1;
-                    }
-
-                    if (!currentFightNumber[area]) {
-                        currentFightNumber[area] = parseInt(area) * 100 + 1;
-                    }
-                });
-
-                // Fusionner et trier tous les combats en cours
-                const allOngoingMatches = Object.values(ongoing).flat();
-                const customSortedMatches = customSortMatches(allOngoingMatches);
-                setFilteredMatches(customSortedMatches);
-
-                setMatches(sortedMatches);
-                setOngoingMatches(ongoing);
-                setCompletedMatches(completed);
-            })
-            .catch(err => console.error('Error fetching matches:', err));
-    }
-}, [selectedCompetition]);
-
-const customSortMatches = (matches) => {
-    return matches.sort((a, b) => {
-        const lastTwoDigitsA = a.fightNumber % 100;
-        const lastTwoDigitsB = b.fightNumber % 100;
-        if (lastTwoDigitsA !== lastTwoDigitsB) {
-            return lastTwoDigitsA - lastTwoDigitsB;
-        }
-        return Math.floor(a.fightNumber / 100) - Math.floor(b.fightNumber / 100);
-    });
-};
 
 
     useEffect(() => {
         if (completedMatches.length > 0) {
             const fetchRoundsPromises = completedMatches.map(match =>
                 fetch(`/api/rounds/getRound?matchId=${match.id}`)
-                .then(res => res.json())
-                .then(data => {
-                    return { matchId: match.id, rounds: data };
-                })
-                .catch(err => {
-                    console.error(`Error fetching rounds for match ${match.id}:`, err);
-                    return { matchId: match.id, rounds: [] };
-                })
+                    .then(res => res.json())
+                    .then(data => {
+                        return { matchId: match.id, rounds: data };
+                    })
+                    .catch(err => {
+                        console.error(`Error fetching rounds for match ${match.id}:`, err);
+                        return { matchId: match.id, rounds: [] };
+                    })
             );
-    
+
             Promise.all(fetchRoundsPromises)
                 .then(results => {
                     const roundsByMatch = results.reduce((acc, result) => {
@@ -163,31 +163,31 @@ const customSortMatches = (matches) => {
         if (ongoingMatchIds.length > 0) {
             const fetchRoundsPromises = ongoingMatchIds.map(matchId =>
                 fetch(`/api/rounds/getRound?matchId=${matchId}`)
-                .then(res => res.json())
-                .then(data => ({ matchId, rounds: data }))
-                .catch(err => {
-                    console.error(`Error fetching rounds for match ${matchId}:`, err);
-                    return { matchId, rounds: [] };
-                })
+                    .then(res => res.json())
+                    .then(data => ({ matchId, rounds: data }))
+                    .catch(err => {
+                        console.error(`Error fetching rounds for match ${matchId}:`, err);
+                        return { matchId, rounds: [] };
+                    })
             );
-    
+
             Promise.all(fetchRoundsPromises)
-            .then(results => {
-                const newRoundSavedData = {};
-                results.forEach(result => {
-                    newRoundSavedData[result.matchId] = result.rounds;
-                });
-                console.log("newRoundSavedData", newRoundSavedData);
-                setRoundSavedData(newRoundSavedData);
-            })
-            .catch(err => console.error('Error fetching all rounds:', err));
+                .then(results => {
+                    const newRoundSavedData = {};
+                    results.forEach(result => {
+                        newRoundSavedData[result.matchId] = result.rounds;
+                    });
+                    console.log("newRoundSavedData", newRoundSavedData);
+                    setRoundSavedData(newRoundSavedData);
+                })
+                .catch(err => console.error('Error fetching all rounds:', err));
         }
     }, [ongoingMatches]);  // Cette dépendance devrait être suffisante pour rafraîchir les données lors des changements
-    
+
 
     // setRoundSavedData(roundData); to display the number of round saved for each match in ongoing match
 
-    
+
 
 
     const handleCurrentFightChange = (area, value) => {
@@ -196,12 +196,12 @@ const customSortMatches = (matches) => {
 
     const calculateRemainingFights = (area) => {
         if (!currentFightNumber[area] || !ongoingMatches[area]) return 0; // Renvoie 0 si aucun combat actuel n'est défini ou si aucun combat n'est en cours pour l'aire
-    
+
         // Trouver le prochain numéro de combat après le combat actuel
         const nextFightIndex = ongoingMatches[area].findIndex(match => match.fightNumber > currentFightNumber[area]);
-    
+
         if (nextFightIndex === -1) return 0; // Renvoie 0 si aucun combat futur n'est trouvé
-    
+
         // Calcul du nombre de combats entre le combat actuel et le prochain combat enregistré
         const nextFightNumber = ongoingMatches[area][nextFightIndex].fightNumber;
         return nextFightNumber - currentFightNumber[area];
@@ -246,22 +246,22 @@ const customSortMatches = (matches) => {
                         <ListItem button key={area} onClick={() => handleAreaChange(area)}>
                             <ListItemText primary={`Aire ${area}`} />
                             <Box key={area}>
-                    <TextField
-                        label={`Current fight in Area ${area}`}
-                        type="number"
-                        value={currentFightNumber[area] || ''}
-                        onChange={(e) => handleCurrentFightChange(area, parseInt(e.target.value))}
-                        sx={{ margin: 1 }}
-                    />
-                   <Typography sx={{ color: duplicateFights.has(remainingFightsByArea[area]) ? 'red' : 'inherit' }}>
-            Remaining Fights in Area {area}: {remainingFightsByArea[area]} fights
-        </Typography>
-                </Box>
+                                <TextField
+                                    label={`Current fight in Area ${area}`}
+                                    type="number"
+                                    value={currentFightNumber[area] || ''}
+                                    onChange={(e) => handleCurrentFightChange(area, parseInt(e.target.value))}
+                                    sx={{ margin: 1 }}
+                                />
+                                <Typography sx={{ color: duplicateFights.has(remainingFightsByArea[area]) ? 'red' : 'inherit' }}>
+                                    Remaining Fights in Area {area}: {remainingFightsByArea[area]} fights
+                                </Typography>
+                            </Box>
                         </ListItem>
                     ))}
                 </List>
             </Drawer>
-            
+
             <Box flex={1} p={2}>
                 <Typography variant="h4" sx={{ marginBottom: 2 }}>Competition Day Viewer</Typography>
                 <Select
@@ -287,11 +287,12 @@ const customSortMatches = (matches) => {
                 {tabValue === 0 && filteredMatches.map(match => (
                     <Paper key={match.id} sx={{ backgroundColor: match.color, padding: 2, marginBottom: 1, color: 'white' }}>
                         <Typography variant="body1">
-                            Fight #{match.fightNumber} - {match.fighter.firstName} {match.fighter.lastName} 
+                            Fight #{match.fightNumber} - {match.fighter.firstName} {match.fighter.lastName}
                         </Typography>
+                        <Avatar src={match.fighter.image} sx={{ width: 100, height: 100, margin: 2 }} />
                         <Typography variant="body1" gutterBottom>
-            Rounds Recorded: {roundSavedData[match.id] ? roundSavedData[match.id].length : 0}
-        </Typography>
+                            Rounds Recorded: {roundSavedData[match.id] ? roundSavedData[match.id].length : 0}
+                        </Typography>
                         <Button onClick={() => openModal(match)}>Manage Rounds</Button>
                     </Paper>
                 ))}
@@ -301,35 +302,36 @@ const customSortMatches = (matches) => {
                         <Typography variant="h6" gutterBottom>
                             Fight #{match.fightNumber} - {match.fighter.firstName} {match.fighter.lastName}
                         </Typography>
+                        <Avatar src={match.fighter.image} sx={{ width: 100, height: 100, margin: 2 }} />
                         <Typography variant="subtitle1" gutterBottom>
                             Result: {match.result}
                         </Typography>
-                        {Array.isArray(roundData[match.id]) ? 
-    roundData[match.id].map(round => (
-        <Box key={round.id} sx={{ paddingLeft: 2, paddingTop: 1 }}>
-            <Typography variant="body2">
-                Round Score: Blue {round.scoreBlue} - Red {round.scoreRed}
-            </Typography>
-            <Typography variant="body2">
-                Victory Type: {round.victoryType || 'N/A'}
-            </Typography>
-            <Typography variant="body2">
-                Result: {round.isWinner ? 'Winner' : 'Loser'}
-            </Typography>
-        </Box>
-    )) :
-    <Box sx={{ paddingLeft: 2, paddingTop: 1 }}>
-        <Typography variant="body2">
-            Round Score: Blue {roundData[match.id]?.scoreBlue} - Red {roundData[match.id]?.scoreRed}
-        </Typography>
-        <Typography variant="body2">
-            Victory Type: {roundData[match.id]?.victoryType || 'N/A'}
-        </Typography>
-        <Typography variant="body2">
-            Result: {roundData[match.id]?.isWinner ? 'Winner' : 'Loser'}
-        </Typography>
-    </Box>
-}
+                        {Array.isArray(roundData[match.id]) ?
+                            roundData[match.id].map(round => (
+                                <Box key={round.id} sx={{ paddingLeft: 2, paddingTop: 1 }}>
+                                    <Typography variant="body2">
+                                        Round Score: Blue {round.scoreBlue} - Red {round.scoreRed}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Victory Type: {round.victoryType || 'N/A'}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Result: {round.isWinner ? 'Winner' : 'Loser'}
+                                    </Typography>
+                                </Box>
+                            )) :
+                            <Box sx={{ paddingLeft: 2, paddingTop: 1 }}>
+                                <Typography variant="body2">
+                                    Round Score: Blue {roundData[match.id]?.scoreBlue} - Red {roundData[match.id]?.scoreRed}
+                                </Typography>
+                                <Typography variant="body2">
+                                    Victory Type: {roundData[match.id]?.victoryType || 'N/A'}
+                                </Typography>
+                                <Typography variant="body2">
+                                    Result: {roundData[match.id]?.isWinner ? 'Winner' : 'Loser'}
+                                </Typography>
+                            </Box>
+                        }
                     </Paper>
                 ))}
 

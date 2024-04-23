@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Typography, List, ListItem, ListItemText, IconButton, Paper } from '@mui/material';
+import { Button, Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModifyCoachModal from './ModifyCoachModal';
@@ -89,6 +89,7 @@ const MyCoachesContent = () => {
             </>
           }>
             <Paper style={{ padding: '10px', margin: '5px 0', backgroundColor: '#f5f5f5', borderRadius: '15px', width: '100%', minHeight: '100px' }}>
+              <Avatar src={coach.image} alt={coach.firstName} width={100} height={100} />
 
             <ListItemText
               //color text in black

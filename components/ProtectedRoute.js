@@ -8,14 +8,18 @@ const ProtectedRoute = ({ children }) => {
     const router = useRouter();
 
     useEffect(() => {
-        if (!loading && !user) {
+        
+        if (loading && !user) {
+                        console.log("Redirection car aucun utilisateur n'est connecté");
+
+            // supprimer les données dans le context
+
+            // Redirige vers la page de connexion
             router.push('/login'); // Redirige vers login si pas connecté et chargement terminé
         }
     }, [user, loading, router]);
 
-    if (loading || !user) {
-        return <LoadingWithImage />; // Affiche le composant de chargement pendant le chargement ou si l'utilisateur n'est pas encore déterminé
-    }
+    
 
     return children;
 };

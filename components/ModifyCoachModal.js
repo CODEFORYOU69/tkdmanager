@@ -1,28 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Avatar } from '@mui/material';
+import { CldUploadWidget } from 'next-cloudinary';
 
 const ModifyCoachModal = ({ coach, open, onClose }) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [imageUrl, setImageUrl] = useState(null);
+
   useEffect(() => {
     if (coach) {
       setName(coach.name);
       setPassword(coach.password);
+      setImageUrl(coach.imageUrl);
       
     }
   }, [coach]);
 
   const handleUpdate = async () => {
+    
     const response = await fetch(`/api/users/${coach.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, password })
+      body: JSON.stringify({ name, password, imageUrl })
     });
 
     if (response.ok) {
       onClose(true);  // Indique que la mise à jour a été effectuée, peut-être rafraîchir les données
     } else {
-      alert('Failed to update coach');
+      alert('Failed to update coachES');
     }
   };
 
@@ -48,6 +53,20 @@ const ModifyCoachModal = ({ coach, open, onClose }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        <Avatar src={imageUrl} alt="avatar" />
+         <CldUploadWidget uploadPreset="tkdmanagerimage"
+                onSuccess={(results) => {
+                    console.log('Public ID', results.info.url);
+                    setImageUrl(results.info.url);
+                  }}>
+  {({ open }) => {
+    return (
+      <button onClick={() => open()}>
+        Upload profil Image
+      </button>
+    );
+  }}
+</CldUploadWidget>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => onClose()}>Cancel</Button>

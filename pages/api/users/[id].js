@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -12,7 +13,7 @@ export default async function handler(req, res) {
                 const coach = await prisma.user.findUnique({
                     where: { id: coachId },
                 });
-                if (fighter) {
+                if (coach) {
                     res.status(200).json(coach);
                 } else {
                     res.status(404).json({ message: 'Coach not found' });
@@ -25,18 +26,19 @@ export default async function handler(req, res) {
         case 'PUT':
             // Code pour mettre à jour un combattant
             try {
-                const { name, password } = req.body;
-                
+                const { name, password, imageUrl } = req.body;
+                console.log("req.body",req.body)
                 const hashedPassword = await bcrypt.hash(password, 10);
 
                 const updatedUser = await prisma.user.update({
                     where: { id: coachId },
                     data: { name, 
-                        category: hashedPassword },
+                        password: hashedPassword ,
+                         image: imageUrl},
                 });
                 res.status(200).json(updatedUser);
             } catch (error) {
-                if (error instanceof prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+                if (error) {
                     res.status(404).json({ message: 'Coach not found' });
                 } else {
                     res.status(500).json({ message: 'Failed to update coach', error: error.message });

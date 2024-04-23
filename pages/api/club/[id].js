@@ -3,19 +3,23 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
-    const fighterId = parseInt(req.query.id); // Convertir l'ID en nombre pour éviter des erreurs
+
+    // get clubID from segment du chemin URL 
+
+    const clubId = parseInt(req.query.id); // Convertir l'ID en nombre pour éviter des erreurs
+
 
     switch (req.method) {
         case 'GET':
             // Traiter une requête GET pour un combattant spécifique
             try {
-                const fighter = await prisma.fighter.findUnique({
-                    where: { id: fighterId },
+                const club = await prisma.club.findUnique({
+                    where: { id: clubId },
                 });
-                if (fighter) {
-                    res.status(200).json(fighter);
+                if (club) {
+                    res.status(200).json(club);
                 } else {
-                    res.status(404).json({ message: 'Fighter not found' });
+                    res.status(404).json({ message: 'Club not found' });
                 }
             } catch (error) {
                 res.status(500).json({ message: 'Server error', error });
@@ -25,17 +29,21 @@ export default async function handler(req, res) {
         case 'PUT':
             // Code pour mettre à jour un combattant
             try {
-                const { firstName, lastName, category, imageUrl } = req.body;
-                const updatedFighter = await prisma.fighter.update({
-                    where: { id: fighterId },
-                    data: { firstName, lastName, category, image: imageUrl },
+                const { name, password } = req.body;
+                
+                const hashedPassword = await bcrypt.hash(password, 10);
+
+                const updatedUser = await prisma.user.update({
+                    where: { id: coachId },
+                    data: { name, 
+                        category: hashedPassword },
                 });
-                res.status(200).json(updatedFighter);
+                res.status(200).json(updatedUser);
             } catch (error) {
                 if (error instanceof prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
-                    res.status(404).json({ message: 'Fighter not found' });
+                    res.status(404).json({ message: 'Coach not found' });
                 } else {
-                    res.status(500).json({ message: 'Failed to update fighter', error: error.message });
+                    res.status(500).json({ message: 'Failed to update coach', error: error.message });
                 }
             }
             break;
@@ -43,15 +51,15 @@ export default async function handler(req, res) {
         case 'DELETE':
             // Code pour supprimer un combattant
             try {
-                await prisma.fighter.delete({
-                    where: { id: fighterId },
+                await prisma.user.delete({
+                    where: { id: coachId },
                 });
                 res.status(204).end(); // No Content, indique que l'action a réussi mais qu'aucun contenu n'est renvoyé
             } catch (error) {
                 if (error instanceof prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
-                    res.status(404).json({ message: 'Fighter not found' });
+                    res.status(404).json({ message: 'Coach not found' });
                 } else {
-                    res.status(500).json({ message: 'Failed to delete fighter', error: error.message });
+                    res.status(500).json({ message: 'Failed to delete coach', error: error.message });
                 }
             }
             break;

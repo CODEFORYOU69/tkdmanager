@@ -9,7 +9,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const { email, password, name } = req.body;
+    const { email, password, name, imageUrl } = req.body;
 
     if (req.method === 'POST') {
         try {
@@ -26,7 +26,8 @@ export default async function handler(
                         email,
                         password: hashedPassword,
                         clubId: club.id,
-                        name
+                        name,
+                        image: imageUrl
                     }
                 });
                 return res.status(201).json({ message: 'Utilisateur créé et ajouté au club existant.' });
@@ -37,7 +38,9 @@ export default async function handler(
                     data: {
                         name,
                         email,  // Supposant que vous souhaitez enregistrer un email pour le club
-                        password: hashedPassword
+                        password: hashedPassword,
+                        image: imageUrl
+
                     }
                 });
                 return res.status(201).json({ message: 'Nouveau club créé, aucun utilisateur ajouté.' });

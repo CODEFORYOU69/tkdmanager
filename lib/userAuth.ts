@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function createUser(email: string, name: string, password: string, clubId: string) {
+export async function createUser(email: string, name: string, password: string, clubId: string , imageUrl: string) {
   const hashedPassword = await bcrypt.hash(password, 10);
  
 
@@ -13,6 +13,7 @@ export async function createUser(email: string, name: string, password: string, 
       name,
       password: hashedPassword,
       clubId: parseInt(clubId),
+      image: imageUrl
     }
   });
   return user;

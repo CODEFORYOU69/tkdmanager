@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Typography, List, ListItem, ListItemText, IconButton, Paper } from '@mui/material';
+import { Button, Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModifyFighterModal from './ModifyFighterModal';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog';
+import Image from 'next/image';
 
 const MyFightersContent = () => {
   const [fighters, setFighters] = useState([]);
@@ -14,30 +15,30 @@ const MyFightersContent = () => {
   const fetchData = () => {
     const token = localStorage.getItem('token');
     if (!token) {
-        console.error('No token found');
-        return;
+      console.error('No token found');
+      return;
     }
 
     // Remarque : Assurez-vous que l'endpoint accepte clubId en tant que paramètre de requête si nécessaire
     // ou ajustez en fonction des besoins réels de votre application.
     fetch('/api/fighters', {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     })
-    .then(response => {
+      .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+          throw new Error('Network response was not ok');
         }
         return response.json();
-    })
-    .then(data => {
+      })
+      .then(data => {
         setFighters(data);
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         console.error('Error fetching fighters:', error.message);
-    });
-};
+      });
+  };
 
 
 
@@ -79,6 +80,7 @@ const MyFightersContent = () => {
             </>
           }>
             <Paper style={{ padding: '10px', margin: '5px 0', backgroundColor: '#f5f5f5', borderRadius: '15px', width: '100%', minHeight: '100px' }}>
+              <Avatar src={fighter.image} alt={fighter.firstName} width={100} height={100} />
               <ListItemText
                 primary={`${fighter.firstName} ${fighter.lastName}`}
                 secondary={`Category: ${fighter.category}`}

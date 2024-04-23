@@ -5,6 +5,7 @@ import { CssBaseline } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import Layout from '../app/layout';
 import MobileNavbar from '../components/MobileNavbar';
+import ProfileCard from '../components/ProfileCard';
 import { AuthProvider } from '../components/AuthProvider'; // Assurez-vous d'ajuster le chemin
 
 const theme = createTheme({
@@ -32,6 +33,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Layout>
             <CssBaseline />
             <MobileNavbar />
+            <ProfileCard />
             <Component {...pageProps} />
           </Layout>
         </AuthProvider>

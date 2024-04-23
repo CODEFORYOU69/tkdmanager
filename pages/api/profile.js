@@ -15,10 +15,11 @@ export default async function handler(req, res) {
         console.log("profileType", profileType)
         //get user id from bearear token
          const token = req.headers.authorization?.split(' ')[1];
+         console.log("token in profile", token)
          const { email } = jwt.verify(token, process.env.JWT_SECRET);
+         console.log("email in token", email)
             
 
-        const userEmail = email; // Assurez-vous que l'ID utilisateur est correctement défini par votre middleware d'authentification
 
         const model = modelMap[profileType]; // Accéder au modèle correspondant
         if (!model) {
@@ -27,9 +28,10 @@ export default async function handler(req, res) {
 
         try {
             const profile = await model.findUnique({
-                where: { email: userEmail }
+                where: { email: email },
             });
             if (profile) {
+                console.log("profile", profile)
                 res.status(200).json(profile);
             } else {
                 res.status(404).json({ message: 'Profile not found' });

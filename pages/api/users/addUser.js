@@ -3,10 +3,10 @@ import { createUser } from '../../../lib/userAuth';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { email, name, password, clubId } = req.body;
+    const { email, name, password, clubId, imageUrl } = req.body;
     
     try {
-      const newUser = await createUser(email, name, password, clubId);
+      const newUser = await createUser(email, name, password, clubId, imageUrl);
       res.status(201).json(newUser);
     } catch (error) {
       res.status(500).json({ message: 'Failed to create user', error: error.message });

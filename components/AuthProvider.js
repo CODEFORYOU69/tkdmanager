@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import LoadingWithImage from './LoadingWithImage'; // Assurez-vous que le chemin d'importation est correct
+import LoadingWithImage from './LoadingWithImage'; // Vérifiez que le chemin d'importation est correct
 
 const AuthContext = createContext(null);
 
@@ -7,41 +7,89 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);  // Ajoute un état de chargement
+    const [profile, setProfile] = useState({ role:'', name: '', imageUrl: '', clubName: '', clubImageUrl: '', clubId: '' });
+    const [loading, setLoading] = useState(true);
 
-        // Fonction pour simuler la connexion
-        const login = (token) => {
-            localStorage.setItem('token', token);
-            setUser({ token });
-            setLoading(false);
-        };
-    
-        // Fonction pour simuler la déconnexion
-        const logout = () => {
-            localStorage.removeItem('token');
-            setUser(null);
-            setLoading(false);
-        };
+    const fetchProfile = async () => {
+        const role = localStorage.getItem('role').replace(/"/g, '');
+        const token = localStorage.getItem('token');
+        setProfile(prev => ({
+                    ...prev,
+                    role: role,
+                }));
+        
+        if (role && token) {
+            try {
+                const response = await fetch(`/api/profile?profileType=${role}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                console.log('data', data);
+                setProfile(prev => ({
+                    ...prev,
+                    name: data.name,
+                    imageUrl: data.image,
+                    clubId: data.clubId
+                }));
+
+                // Si l'utilisateur est connecté et le rôle est 'user', obtenir également les informations du club
+if (role === 'user' && data.clubId) {
+    const clubResponse = await fetch(`/api/club/${data.clubId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    const clubData = await clubResponse.json();
+    console.log('clubData', clubData);
+    setProfile(prev => ({
+        ...prev,
+        clubName: clubData.name,
+        clubImageUrl: clubData.image
+    }));
+}
+
+            } catch (error) {
+                console.error('Error fetching profile or club info:', error);
+            }
+        }
+        console.log('Profile fetched', );
+    };
+
+    // Fonctions pour gérer la connexion et la déconnexion
+    const login = async (token) => {
+        localStorage.setItem('token', token);
+        setUser({ token });
+        await fetchProfile();
+        setLoading(false);
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        setUser(null);
+        setLoading(false);
+    };
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            // Supposons que cela simule un appel réseau pour valider le token
-            setTimeout(() => {
-                setUser({ token });
+        if (localStorage.getItem('token')) {
+            setTimeout(async () => {
+                await fetchProfile();
                 setLoading(false);
-            }, 3000); // Delai pour simuler l'appel réseau
+            }, 3000);
         } else {
             setLoading(false);
         }
     }, []);
 
     if (loading) {
-        return <LoadingWithImage />; // Affiche le loader pendant la vérification du token
+        return <LoadingWithImage />;
     }
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, profile }}>
             {children}
         </AuthContext.Provider>
     );
