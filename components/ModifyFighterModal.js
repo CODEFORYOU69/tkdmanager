@@ -2,12 +2,16 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Avatar } from '@mui/material';
 import { CldUploadWidget } from 'next-cloudinary';
+import { useNotification } from './NotificationService';
+
 
 const ModifyFighterModal = ({ fighter, open, onClose }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [category, setCategory] = useState('');
   const [imageUrl, setImageUrl] = useState(null);
+
+  const { notify } = useNotification();
 
   useEffect(() => {
     if (fighter) {
@@ -26,9 +30,10 @@ const ModifyFighterModal = ({ fighter, open, onClose }) => {
     });
 
     if (response.ok) {
+      notify?.('Fighter updated', { variant: "success" });
       onClose(true);  // Indique que la mise à jour a été effectuée, peut-être rafraîchir les données
     } else {
-      alert('Failed to update fighter');
+      notify?.('Failed to update fighter', { variant: "error" });
     }
   };
 

@@ -1,16 +1,21 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { useNotification } from './NotificationService';
 
 const DeleteConfirmationDialog = ({ fighter, open, onClose }) => {
+
+  const { notify } = useNotification();
+
   const handleDelete = async () => {
     const response = await fetch(`/api/fighters/${fighter.id}`, {
       method: 'DELETE'
     });
 
     if (response.ok) {
+      notify?.('Fighter deleted successfully', { variant:'success' });
       onClose(true);  // Pass true to indicate that a deletion was successful
     } else {
-      alert('Failed to delete the fighter');
+      notify?.('Failed to delete fighter', { variant: 'error' });
       onClose();  // Close the modal without refreshing the fighters list
     }
   };

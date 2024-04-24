@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Avatar } from '@mui/material';
 import { CldUploadWidget } from 'next-cloudinary';
+import { useNotification } from './NotificationService';
+
 
 const ModifyCoachModal = ({ coach, open, onClose }) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [imageUrl, setImageUrl] = useState(null);
+
+   const { notify } = useNotification();
 
   useEffect(() => {
     if (coach) {
@@ -25,9 +29,10 @@ const ModifyCoachModal = ({ coach, open, onClose }) => {
     });
 
     if (response.ok) {
+      notify?.('Coach updated', { variant: "success" });
       onClose(true);  // Indique que la mise à jour a été effectuée, peut-être rafraîchir les données
     } else {
-      alert('Failed to update coachES');
+      notify?.('Failed to update coach', { variant: "error" });
     }
   };
 

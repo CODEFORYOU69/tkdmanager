@@ -1,10 +1,10 @@
+"use client";
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar } from '@mui/material';
+import { Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModifyFighterModal from './ModifyFighterModal';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog';
-import Image from 'next/image';
 
 const MyFightersContent = () => {
   const [fighters, setFighters] = useState([]);

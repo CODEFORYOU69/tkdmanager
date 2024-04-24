@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, Select, MenuItem, InputLabel } from '@mui/material';
+import { useNotification } from './NotificationService';
 
 export default function AddRoundModal({ open, onClose, match }) {
   const [rounds, setRounds] = useState([]);
+
+  const { notify } = useNotification();
 
   const handleAddRound = () => {
     setRounds([...rounds, { scoreBlue: '', scoreRed: '', isWinner: '', victoryType: '' }]);
@@ -28,7 +31,9 @@ export default function AddRoundModal({ open, onClose, match }) {
 
       if (!response.ok) {
         // Handle error for individual round creation
-        console.error('Failed to add round:', round);
+        notify?.('Error creating round', { variant: 'error' });
+      } else {
+        notify?.('Round added successfully', { variant:'success' });
       }
     }
     onClose(); // Close the modal after potential errors are handled

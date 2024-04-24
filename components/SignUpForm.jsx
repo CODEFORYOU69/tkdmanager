@@ -1,19 +1,19 @@
 "use client"
 import React, { useState } from 'react';
-import { useSnackbar } from 'notistack';
 import { TextField, Button, Box, Container } from '@mui/material';
-import { PrismaClient } from '@prisma/client';
 import { CldUploadWidget } from 'next-cloudinary';
+import { useNotification } from './NotificationService';
 
 
-const prisma = new PrismaClient();
 
 const SignUpForm = () => {
-  const { enqueueSnackbar } = useSnackbar();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [clubName, setClubName] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+
+  const { notify } = useNotification(); // Utiliser le contexte de notification ou un objet vide si null
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,9 +34,9 @@ const SignUpForm = () => {
     const data = await response.json();
 
     if (response.ok) {
-      enqueueSnackbar(data.message, { variant: "success" });
+      notify?.(data.message, { variant: "success" });
     } else {
-      enqueueSnackbar(data.message, { variant: "error" });
+      notify?.(data.message, { variant: "error" });
     }
   };
 

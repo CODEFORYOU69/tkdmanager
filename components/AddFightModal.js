@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, MenuItem, Select, InputLabel, FormControl, IconButton } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import { useNotification } from './NotificationService';
+
 
 const AddFightModal = ({ open, onClose, competitionId }) => {
     const [fights, setFights] = useState([{ fightNumber: '', color: '' }]);
     const [fighters, setFighters] = useState([]);
     const [selectedFighterId, setSelectedFighterId] = useState('');
+
+    const { notify } = useNotification();
 
 
     const fetchData = () => {
@@ -58,9 +62,10 @@ const AddFightModal = ({ open, onClose, competitionId }) => {
         });
 
         if (response.ok) {
+            notify?.('Fights added to competition', { variant:'success' });
             onClose(true);
         } else {
-            alert('Failed to add fights to competition');
+            notify?.('Error adding fights to competition', { variant: 'error' });
         }
     };
 

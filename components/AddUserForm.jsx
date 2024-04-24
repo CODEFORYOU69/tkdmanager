@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import jwt from 'jsonwebtoken';
+import { useNotification } from './NotificationService';
+
 
 const AddUserForm = ({ open, handleClose }) => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [clubId, setClubId] = useState('');  // State to store clubId
+
+    const { notify } = useNotification();
 
     // Function to get clubId from the stored JWT
     const getClubIdFromToken = () => {
@@ -18,7 +22,7 @@ const AddUserForm = ({ open, handleClose }) => {
     };
 
     // Call getClubIdFromToken when the component mounts
-    React.useEffect(() => {
+    useEffect(() => {
         getClubIdFromToken();
     }, []);
 
@@ -38,12 +42,15 @@ const AddUserForm = ({ open, handleClose }) => {
             });
 
             if (response.ok) {
+                notify('User added successfully', { variant: 'success' });
                 handleClose();
             } else {
                 const errorData = await response.json();
+                notify('Error while adding user', { variant: 'error' });
                 console.error('Error submitting form:', errorData.message || 'Unknown error');
             }
         } catch (err) {
+            notify('Error while adding user', { variant: 'error' });
             console.error('Error with fetch operation:', err);
         }
     };

@@ -1,39 +1,43 @@
 // pages/login.tsx
 import React, { useState } from 'react';
-import { useSnackbar } from 'notistack';
+import { useNotification } from './NotificationService'; // Assurez-vous que le chemin est correct
 
 import { TextField, Button, Container, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
-const Login: React.FC = () => {
-  const [credentials, setCredentials] = useState({ email: '', password: '' });
+const Login = () => {
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
   const router = useRouter();
+  const { notify } = useNotification() ; // Utiliser le contexte de notification ou un objet vide si null
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event) => {
     setCredentials({ ...credentials, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event) => {
     //remove token from localstorage
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     event.preventDefault();
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials)
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credentials),
       });
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('role', JSON.stringify(data.account.role));
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("role", JSON.stringify(data.account.role));
+        notify?.("Connexion réussie!", { variant: "success" });
+
         // Save the JWT in localStorage
-        router.push('/dashboard');  // Redirect to a protected page
+        router.push("/dashboard"); // Redirect to a protected page
       } else {
-        alert(data.message);  // Show error message from server
+        notify?.(data.message, { variant: "error" });
       }
     } catch (error) {
-      console.error('Login error:', error);
+      notify?.("Erreur de connexion", { variant: "error" });
+      console.error("Login error:", error);
     }
   };
 
@@ -67,12 +71,7 @@ const Login: React.FC = () => {
           value={credentials.password}
           onChange={handleChange}
         />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-        >
+        <Button type="submit" fullWidth variant="contained" color="primary">
           Se connecter
         </Button>
       </form>

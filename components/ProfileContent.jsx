@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, Container, Typography } from '@mui/material';
 import { CldUploadWidget } from 'next-cloudinary';
+import { useNotification } from './NotificationService';
+import { useRouter } from 'next/router';
+
 
 
 const Profile = () => {
@@ -10,6 +13,9 @@ const Profile = () => {
     // Initialement définir 'user' ou 'club' basé sur ce qui est stocké dans localStorage
     const [profileType, setProfileType] = useState(localStorage.getItem('role').replace(/"/g, ''));
 
+    const router = useRouter();
+    const { notify } = useNotification();
+
     useEffect(() => {
         fetch(`/api/profile?profileType=${profileType}`, {
             headers: {
@@ -17,9 +23,9 @@ const Profile = () => {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         })
-        .then(res => res.json())
-        .then(data => setProfile(data))
-        .catch(err => console.error('Error fetching profile:', err));
+            .then(res => res.json())
+            .then(data => setProfile(data))
+            .catch(err => console.error('Error fetching profile:', err));
     }, [profileType]);
 
     const handleInputChange = (e) => {
@@ -27,9 +33,6 @@ const Profile = () => {
         setProfile(prev => ({ ...prev, [name]: value }));
     };
 
-    // const handleImageChange = (e) => {
-    //     setImage(e.target.files[0]);
-    // };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -51,9 +54,13 @@ const Profile = () => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log('Profile updated', data);
+                console.log('data', data);
+                notify?.('Fighter added successfully', { variant: 'success' });
             })
-            .catch(error => console.error('Error updating profile', error));
+            .catch(error => {
+                console.error('Error updating profile:', error);
+                notify?.('Error updating profile', { variant: 'error' });
+            });
     };
 
 
@@ -87,18 +94,18 @@ const Profile = () => {
                     margin="normal"
                 />
                 <CldUploadWidget uploadPreset="tkdmanagerimage"
-                onSuccess={(results) => {
-                    console.log('Public ID', results.info.url);
-                    setImageUrl(results.info.url);
-                  }}>
-  {({ open }) => {
-    return (
-      <button onClick={() => open()}>
-        Upload profil Image
-      </button>
-    );
-  }}
-</CldUploadWidget>
+                    onSuccess={(results) => {
+                        console.log('Public ID', results.info.url);
+                        setImageUrl(results.info.url);
+                    }}>
+                    {({ open }) => {
+                        return (
+                            <button onClick={() => open()}>
+                                Upload profil Image
+                            </button>
+                        );
+                    }}
+                </CldUploadWidget>
                 {/* <Typography variant="subtitle1">Profile Image</Typography>
                 <input
                     type="file"

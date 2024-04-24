@@ -1,25 +1,10 @@
 // components/AddFighterModal.tsx
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
-
-type CategoryAgeGroups = {
-    [key: string]: string[];  // Adding index signature
-    Baby: string[];
-    Pupille: string[];
-    Benjamins: string[];
-    Cadets: string[];
-    Junior: string[];
-    Espoir: string[];
-    Senior: string[];
-    Master: string[];
-};
-
-type Categories = {
-    [key: string]: CategoryAgeGroups;  // This stays the same as your current definition
-};
+import { useNotification } from './NotificationService';
 
 
-const categories: Categories = {
+const categories = {
     Male: {
         Baby: [],
         Pupille: [],
@@ -42,42 +27,45 @@ const categories: Categories = {
     }
 };
 
-  
-  
 
-const AddFighterModal = ({ open, handleClose }: { open: boolean, handleClose: () => void }) => {
+
+
+const AddFighterModal = ({ open, handleClose }) => {
     const [firstName, setfirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [sex, setSex] = useState('');
     const [ageCategory, setAgeCategory] = useState('');
     const [weightCategory, setWeightCategory] = useState('');
 
+    const { notify } = useNotification();
+
 
     const handleSave = async () => {
         const category = `${sex}-${ageCategory}-${weightCategory}`;
         const token = localStorage.getItem('token'); // Récupérer l'ID du club stocké
         const response = await fetch('/api/fighters/add', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            firstName: firstName,
-            lastName: lastName,
-            category: category,
-        }),
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                firstName: firstName,
+                lastName: lastName,
+                category: category,
+            }),
         });
-      
-        if (response.ok) {
-          handleClose(); // Fermer la modale après l'ajout
-        } else {
-          console.error('Failed to add fighter');
-        }
-      };
-      
 
-      return (
+        if (response.ok) {
+            notify('Fighter added successfully', { variant: 'success' });
+            handleClose(); // Fermer la modale après l'ajout
+        } else {
+            notify('Error while adding fighter', { variant: 'error' });
+        }
+    };
+
+
+    return (
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Add New Fighter</DialogTitle>
             <DialogContent>

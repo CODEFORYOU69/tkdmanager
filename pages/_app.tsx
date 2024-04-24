@@ -2,11 +2,11 @@
 import { AppProps } from 'next/app';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { SnackbarProvider } from 'notistack';
 import Layout from '../app/layout';
 import MobileNavbar from '../components/MobileNavbar';
 import ProfileCard from '../components/ProfileCard';
 import { AuthProvider } from '../components/AuthProvider'; // Assurez-vous d'ajuster le chemin
+import { NotificationProvider } from "../components/NotificationService";
 
 const theme = createTheme({
     palette: {
@@ -28,7 +28,7 @@ const theme = createTheme({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
-      <SnackbarProvider maxSnack={3}>
+      <NotificationProvider>
         <AuthProvider> 
           <Layout>
             <CssBaseline />
@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Component {...pageProps} />
           </Layout>
         </AuthProvider>
-      </SnackbarProvider>
+      </NotificationProvider>
     </ThemeProvider>
   );
 }
