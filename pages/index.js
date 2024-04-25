@@ -41,24 +41,50 @@ const HomePage = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container maxWidth="md" sx={{ height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <Typography variant="h2" component="h1" gutterBottom>
-          TKD Manager
-        </Typography>
-        <Box sx={{ width: 300, height: 300, position: 'relative' }}>
-          <Image 
-          src="/tkdmanager.jpeg" 
-          alt="TKD Manager Image" 
-          style={{ objectFit: 'cover' }}
-          fill 
-          sizes='(max-width: 300px) 100vw, 300px'
-          priority />
-        </Box>
-        <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
-          <Button variant="contained" color="primary" onClick={handleSignInClick}>Sign In</Button>
-          <Button variant="contained" color="secondary" onClick={handleLogInClick}>Log In</Button>
-        </Box>
-      </Container>
+      <Container maxWidth="md" sx={{
+  height: '50vh',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  '@media (orientation: landscape) and (max-height: 500px)': {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  }
+}}>
+  <Box sx={{
+    display: 'flex',
+    
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '20px',  // Ajoute un espace entre les éléments
+    width: '100%', // Utilise la largeur complète du conteneur
+    '@media (orientation: landscape) and (max-height: 500px)': {
+      flexDirection: 'row',
+      gap: '100px',  // Réduit l'espace entre les éléments
+
+      width: 'auto',
+    }
+  }}>
+    <Typography variant="h2" component="h2" gutterBottom>
+      TKD Manager
+    </Typography>
+    <Image 
+      src="/tkdmanager.jpeg" 
+      alt="TKD Manager Image" 
+      width={100}
+      height={100}
+      objectFit="contain"
+      priority
+    />
+  </Box>
+  <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
+    <Button variant="contained" color="primary" onClick={handleSignInClick}>Sign In</Button>
+    <Button variant="contained" color="secondary" onClick={handleLogInClick}>Log In</Button>
+  </Box>
+</Container>
+
+
     </ThemeProvider>
   );
 };
