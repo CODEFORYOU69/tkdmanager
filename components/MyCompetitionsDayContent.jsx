@@ -82,7 +82,7 @@ export default function CompetitionDayContent() {
                     const sortedMatches = data.sort((a, b) => a.fightNumber - b.fightNumber);
                     const ongoing = {};
                     const completed = [];
-                    
+
                     sortedMatches.forEach(match => {
                         const area = Math.floor(match.fightNumber / 100).toString();
 
@@ -253,8 +253,8 @@ export default function CompetitionDayContent() {
 
             <Box flex={1} p={2}>
                 <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
-                    <Typography variant="h4" sx={{ textAlign: 'center' }}>Competition Day Viewer</Typography>
-                </Box>  
+                    <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>Competition Day Viewer</Typography>
+                </Box>
                 <Select
                     value={selectedCompetition?.id || ''}
                     onChange={handleCompetitionChange}

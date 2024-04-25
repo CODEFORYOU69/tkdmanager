@@ -40,8 +40,8 @@ const MyCompetitionsContent = () => {
         <Container maxWidth="md">
             <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
 
-                <Typography variant="h4" sx={{ textAlign: 'center' }}>Organise my fight</Typography>
-            </Box> 
+                <Typography variant="h4" color="primary"  sx={{ textAlign: 'center' }}>Organise my fight</Typography>
+            </Box>
             <Select value={selectedCompetition?.id || ''} onChange={handleSelectCompetition} fullWidth>
                 {competitions && competitions[0] && competitions.map(competition => (
                     <MenuItem key={competition.id} value={competition.id}>{competition.name}</MenuItem>

@@ -21,30 +21,30 @@ const MyCoachesContent = () => {
     }, 500);
     const token = localStorage.getItem('token');
     if (!token) {
-        console.error('No token found');
-        return;
+      console.error('No token found');
+      return;
     }
 
     // Remarque : Assurez-vous que l'endpoint accepte clubId en tant que paramètre de requête si nécessaire
     // ou ajustez en fonction des besoins réels de votre application.
     fetch('/api/users', {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     })
-    .then(response => {
+      .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+          throw new Error('Network response was not ok');
         }
         return response.json();
-    })
-    .then(data => {
+      })
+      .then(data => {
         setCoaches(data);
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         console.error('Error fetching coachs:', error.message);
-    });
-};
+      });
+  };
 
   useEffect(() => {
     fetchData();
@@ -73,45 +73,45 @@ const MyCoachesContent = () => {
       {loading ? (
         <LoadingWithImage />
       ) : (
-    <Container maxWidth="sm">
-            <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
-              <Typography variant="h4" sx={{ textAlign: 'center' }}>My Coachs</Typography>
-            </Box>       <List>
-        {coaches.map(coach => (
-          <ListItem key={coach.id} secondaryAction={
+        <Container maxWidth="sm">
+          <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
+            <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>My Coachs</Typography>
+          </Box>       <List>
+            {coaches.map(coach => (
+              <ListItem key={coach.id} secondaryAction={
+                <>
+                  <IconButton edge="end" onClick={() => handleOpenModify(coach)}>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton edge="end" onClick={() => handleOpenDelete(coach)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </>
+              }>
+                <Paper style={{ padding: '10px', margin: '5px 0', backgroundColor: '#f5f5f5', borderRadius: '15px', width: '100%', minHeight: '100px' }}>
+                  <Avatar src={coach.image} alt={coach.firstName} width={100} height={100} />
+
+                  <ListItemText
+                    //color text in black
+                    color='textPrimary'
+                    primary={`${coach.name} `}
+                    primaryTypographyProps={{ style: { color: 'black' } }}
+
+
+                  />
+                </Paper>
+
+              </ListItem>
+            ))}
+          </List>
+          {selectedCoach && (
             <>
-              <IconButton edge="end" onClick={() => handleOpenModify(coach)}>
-                <EditIcon />
-              </IconButton>
-              <IconButton edge="end" onClick={() => handleOpenDelete(coach)}>
-                <DeleteIcon />
-              </IconButton>
+              <ModifyCoachModal coach={selectedCoach} open={isModifyOpen} onClose={() => handleClose(true)} />
+              <DeleteUser coach={selectedCoach} open={isDeleteOpen} onClose={handleClose} />
             </>
-          }>
-            <Paper style={{ padding: '10px', margin: '5px 0', backgroundColor: '#f5f5f5', borderRadius: '15px', width: '100%', minHeight: '100px' }}>
-              <Avatar src={coach.image} alt={coach.firstName} width={100} height={100} />
-
-            <ListItemText
-              //color text in black
-              color='textPrimary'
-              primary={`${coach.name} `}
-              primaryTypographyProps={{ style: { color: 'black' } }}
-
-             
-            />
-           </Paper>
-
-          </ListItem>
-        ))}
-      </List>
-      {selectedCoach && (
-        <>
-          <ModifyCoachModal coach={selectedCoach} open={isModifyOpen} onClose={() => handleClose(true)} />
-          <DeleteUser coach={selectedCoach} open={isDeleteOpen} onClose={handleClose} />
-        </>
+          )}
+        </Container>
       )}
-    </Container>
-    )}
     </div>
   );
 };

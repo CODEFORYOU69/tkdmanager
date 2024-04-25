@@ -58,7 +58,7 @@ const SocialMedia = () => {
     return (
         <Grid container spacing={2} mt={2} direction="column" alignItems="center">
             <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
-                    <Typography variant="h4" sx={{ textAlign: 'center' }}>Social Media Image</Typography>
+                    <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>Social Media Image</Typography>
                 </Box> 
             {loading && (
                 <CircularProgress />

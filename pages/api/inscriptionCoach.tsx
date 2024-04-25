@@ -36,7 +36,7 @@ const InscriptionCoach: React.FC = () => {
 
   return (
     <Container maxWidth="sm">
-      <Typography variant="h4" sx={{ mb: 4 }}>Inscription Coach</Typography>
+      <Typography variant="h4" color="primary" sx={{ mb: 4 }}>Inscription Coach</Typography>
       <form onSubmit={handleSubmit}>
         <TextField
           label="Nom complet"

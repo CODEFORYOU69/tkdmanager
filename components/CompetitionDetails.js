@@ -21,7 +21,7 @@ const CompetitionDetails = ({ competition }) => {
 
     return (
         <div>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" color="primary" gutterBottom>
                 Fighters in {competition.name}
             </Typography>
             {fighters.map(fighter => (

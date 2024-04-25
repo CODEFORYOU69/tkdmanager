@@ -68,7 +68,7 @@ const MyFightersContent = () => {
     <Container maxWidth="sm">
       <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
 
-        <Typography variant="h4" sx={{ textAlign: 'center' }}>My Fighters</Typography>
+        <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>My Fighters</Typography>
       </Box>
       <List>
         {fighters.map(fighter => (

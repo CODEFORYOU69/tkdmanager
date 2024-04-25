@@ -33,7 +33,7 @@ const DashboardContent = () => {
   return (
     <Container maxWidth="sm">
       <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
-                <Typography variant="h4" sx={{ textAlign: 'center' }}>Dashboard</Typography>
+                <Typography variant="h4" color="primary"   sx={{ textAlign: 'center' }}>Dashboard</Typography>
             </Box>   
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Button variant="contained" onClick={handleAddUserOpen}>

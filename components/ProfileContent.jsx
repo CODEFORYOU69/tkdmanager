@@ -77,7 +77,7 @@ const Profile = () => {
     return (
         <Container maxWidth="sm">
             <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
-                <Typography variant="h4" sx={{ textAlign: 'center' }}>Edit {profileType === 'user' ? 'User' : 'Club'} Profile</Typography>
+                <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>Edit {profileType === 'user' ? 'User' : 'Club'} Profile</Typography>
             </Box>            <form onSubmit={handleSubmit}>
                 <TextField
                     fullWidth
