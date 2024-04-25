@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const router = useRouter();
-  const { notify } = useNotification() ; // Utiliser le contexte de notification ou un objet vide si null
+  const { notify } = useNotification(); // Utiliser le contexte de notification ou un objet vide si null
 
   const handleChange = (event) => {
     setCredentials({ ...credentials, [event.target.name]: event.target.value });
@@ -28,7 +28,7 @@ const Login = () => {
       if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", JSON.stringify(data.account.role));
-        notify?.("Connexion réussie!", { variant: "success" });
+        notify("Connexion réussie!", { variant: "success" });
 
         // Save the JWT in localStorage
         router.push("/dashboard"); // Redirect to a protected page
@@ -36,7 +36,7 @@ const Login = () => {
         notify?.(data.message, { variant: "error" });
       }
     } catch (error) {
-      notify?.("Erreur de connexion", { variant: "error" });
+      notify("Erreur de connexion", { variant: "error" });
       console.error("Login error:", error);
     }
   };

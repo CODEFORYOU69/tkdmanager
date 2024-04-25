@@ -61,15 +61,37 @@ const MobileNavbar: React.FC = () => {
           open={open}
           onClose={handleClose}
         >
-          <Link href="/"><MenuItem onClick={handleClose}>Home</MenuItem></Link>
-          <Link href="/profile"><MenuItem onClick={handleClose}>Profile</MenuItem></Link>
-          <Link href="/dashboard"><MenuItem onClick={handleClose}>Dashboard</MenuItem></Link>
-          <Link href="/my-coaches"><MenuItem onClick={handleClose}>Coach</MenuItem></Link>
-          <Link href="/my-fighters"><MenuItem onClick={handleClose}>Fighter</MenuItem></Link>
-          <Link href="/mycompetitions"><MenuItem onClick={handleClose}>My Competition</MenuItem></Link>
-          <Link href="/competitionday"><MenuItem onClick={handleClose}>Fight Day</MenuItem></Link>
-          <Link href="/inscription"><Button color="inherit" onClick={handleClose}>Signin</Button></Link>
-          <Link href="/login"><Button color="inherit" onClick={handleClose}>Login</Button></Link>
+<Link href="/" passHref>
+  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Home</MenuItem>
+</Link>
+<Link href="/profile" passHref>
+  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Profile</MenuItem>
+</Link>
+<Link href="/dashboard" passHref>
+  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Dashboard</MenuItem>
+</Link>
+<Link href="/my-coaches" passHref>
+  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Coach</MenuItem>
+</Link>
+<Link href="/my-fighters" passHref>
+  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Fighter</MenuItem>
+</Link>
+<Link href="/mycompetitions" passHref>
+  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">My Competition</MenuItem>
+</Link>
+<Link href="/competitionday" passHref>
+  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Fight Day</MenuItem>
+</Link>
+<Link href="/socialMedia" passHref>
+  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Social Media</MenuItem>
+</Link>
+<Link href="/inscription" passHref>
+  <Button color="inherit" onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Signin</Button>
+</Link>
+<Link href="/login" passHref>
+  <Button color="inherit" onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Login</Button>
+</Link>
+
           <Button color="inherit" onClick={handleLogout}>Log out</Button>
         </Menu>
       </Toolbar>

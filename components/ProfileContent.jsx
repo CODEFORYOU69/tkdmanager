@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Button, TextField, Container, Typography } from '@mui/material';
 import { CldUploadWidget } from 'next-cloudinary';
 import { useNotification } from './NotificationService';
-import { useRouter } from 'next/router';
 
 
 
@@ -13,7 +12,6 @@ const Profile = () => {
     // Initialement définir 'user' ou 'club' basé sur ce qui est stocké dans localStorage
     const [profileType, setProfileType] = useState(localStorage.getItem('role').replace(/"/g, ''));
 
-    const router = useRouter();
     const { notify } = useNotification();
 
     useEffect(() => {

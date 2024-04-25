@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import jwt from 'jsonwebtoken';
 import { useNotification } from './NotificationService';
+import { CldUploadWidget } from 'next-cloudinary';
+
 
 
 const AddUserForm = ({ open, handleClose }) => {
@@ -9,6 +11,7 @@ const AddUserForm = ({ open, handleClose }) => {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [clubId, setClubId] = useState('');  // State to store clubId
+    const [imageUrl, setImageUrl] = useState('');
 
     const { notify } = useNotification();
 
@@ -38,6 +41,7 @@ const AddUserForm = ({ open, handleClose }) => {
                     name,
                     password,
                     clubId,
+                    imageUrl,
                 }),
             });
 
@@ -57,7 +61,34 @@ const AddUserForm = ({ open, handleClose }) => {
 
     return (
         <Dialog open={open} onClose={handleClose}>
+
             <DialogTitle>Add New User</DialogTitle>
+            <CldUploadWidget uploadPreset="tkdmanagerimage"
+                onSuccess={(results) => {
+                    console.log('Public ID', results.info.url);
+                    setImageUrl(results.info.url);
+                }}>
+                {({ open }) => {
+                    return (
+                        <button
+                            style={{
+                                border: '2px solid black', // Sets a black border around the button
+                                padding: '10px 20px', // Adds some padding inside the button for better spacing
+                                color: 'white', // Sets the text color to white
+                                cursor: 'pointer',
+                                margin: '25px', // Adds some margin around the button 
+                                borderRadius: '5px', // Rounds the corners of the button
+                                backgroundColor: 'black', // Sets the background color to black
+
+                                // Changes the cursor to a pointer on hover
+                            }}
+                            onClick={() => open()}>
+                            Upload Profile Image
+                        </button>
+                    );
+                }}
+            </CldUploadWidget>
+
             <DialogContent>
                 <TextField autoFocus margin="dense" label="Email Address" type="email" fullWidth variant="outlined" value={email} onChange={e => setEmail(e.target.value)} />
                 <TextField margin="dense" label="Name" type="text" fullWidth variant="outlined" value={name} onChange={e => setName(e.target.value)} />

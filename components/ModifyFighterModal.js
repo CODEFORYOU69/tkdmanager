@@ -1,9 +1,15 @@
-"use client";
+"use client"
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Avatar } from '@mui/material';
-import { CldUploadWidget } from 'next-cloudinary';
+import { Dashboard } from '@uppy/react';
+import Uppy from '@uppy/core';
+import XHRUpload from '@uppy/xhr-upload';
+import Webcam from '@uppy/webcam';
+import ImageEditor from '@uppy/image-editor';
+import '@uppy/core/dist/style.css';
+import '@uppy/dashboard/dist/style.css';
+import '@uppy/image-editor/dist/style.css';
 import { useNotification } from './NotificationService';
-
 
 const ModifyFighterModal = ({ fighter, open, onClose }) => {
   const [firstName, setFirstName] = useState('');
@@ -13,14 +19,47 @@ const ModifyFighterModal = ({ fighter, open, onClose }) => {
 
   const { notify } = useNotification();
 
+  const uppy = new Uppy({
+    restrictions: { maxNumberOfFiles: 1 },
+    autoProceed: false
+  });
+
+  uppy.use(Webcam);
+  uppy.use(ImageEditor);
+  uppy.use(XHRUpload, {
+    endpoint: '/api/removeBackground',
+    fieldName: 'file',
+    formData: true,
+    method: 'post',
+    bundle: true,
+    headers: {
+      accept: 'application/json',
+    },
+    onError: (error) => {
+      notify(`Error: ${error.message}`, { variant: "error" });
+    },
+
+  });
+
+  uppy.on('upload-success', (file, response) => {
+  console.log('Successful upload:', file);
+  console.log('Server response:', response.body);
+  if (response.status === 200) {
+    const responseData = response.body;
+    setImageUrl(responseData.imageUrl);
+    if (responseData.imageUrl) {
+      console.log('Image processed and uploaded successfully:', responseData.imageUrl);
+    }
+  }
+});
+
   useEffect(() => {
     if (fighter) {
       setFirstName(fighter.firstName);
       setLastName(fighter.lastName);
       setCategory(fighter.category);
-      setImageUrl(fighter.imageUrl);
     }
-  }, [fighter]);
+  }, [fighter, imageUrl]);
 
   const handleUpdate = async () => {
     const response = await fetch(`/api/fighters/${fighter.id}`, {
@@ -30,10 +69,10 @@ const ModifyFighterModal = ({ fighter, open, onClose }) => {
     });
 
     if (response.ok) {
-      notify?.('Fighter updated', { variant: "success" });
-      onClose(true);  // Indique que la mise à jour a été effectuée, peut-être rafraîchir les données
+      notify('Fighter updated successfully', { variant: "success" });
+      onClose(true);
     } else {
-      notify?.('Failed to update fighter', { variant: "error" });
+      notify('Failed to update fighter', { variant: "error" });
     }
   };
 
@@ -41,6 +80,11 @@ const ModifyFighterModal = ({ fighter, open, onClose }) => {
     <Dialog open={open} onClose={() => onClose()}>
       <DialogTitle>Edit Fighter</DialogTitle>
       <DialogContent>
+        <Dashboard
+          uppy={uppy}
+          proudlyDisplayPoweredByUppy={false}
+          plugins={['Webcam', 'ImageEditor']}
+        />
         <TextField
           margin="dense"
           label="First Name"
@@ -68,20 +112,7 @@ const ModifyFighterModal = ({ fighter, open, onClose }) => {
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         />
-        <Avatar src={imageUrl} alt="avatar" />
-        <CldUploadWidget uploadPreset="tkdmanagerimage"
-                onSuccess={(results) => {
-                    console.log('Public ID', results.info.url);
-                    setImageUrl(results.info.url);
-                  }}>
-  {({ open }) => {
-    return (
-      <button onClick={() => open()}>
-        Upload profil Image
-      </button>
-    );
-  }}
-</CldUploadWidget>
+        {imageUrl && <Avatar src={imageUrl} alt="Fighter" />}
       </DialogContent>
       <DialogActions>
         <Button onClick={() => onClose()}>Cancel</Button>

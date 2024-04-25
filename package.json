@@ -10,15 +10,27 @@
     "deploy": "prisma migrate deploy"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.13.0",
+    "@cloudinary/url-gen": "^1.19.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fontsource/roboto-condensed": "^5.0.15",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@prisma/client": "^5.12.1",
+    "@uppy/core": "^3.10.1",
+    "@uppy/dashboard": "^3.8.1",
+    "@uppy/drag-drop": "^3.1.0",
+    "@uppy/file-input": "^3.1.1",
+    "@uppy/image-editor": "^2.4.4",
+    "@uppy/progress-bar": "^3.1.1",
+    "@uppy/react": "^3.3.0",
+    "@uppy/webcam": "^3.4.0",
+    "@uppy/xhr-upload": "^3.6.4",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "cloudinary": "^1.41.3",
+    "cloudinary-react": "^1.8.1",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "multer": "^1.4.5-lts.1",
@@ -29,7 +41,8 @@
     "notistack": "^3.0.1",
     "punycode": "^2.3.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

@@ -6,9 +6,7 @@ const ProfileCard = () => {
     const { profile } = useAuth();
 
     // Gérer l'affichage conditionnel lorsque les données du profil ne sont pas encore chargées
-    if (!profile || !profile.name) {
-        return <div>Loading...</div>; // Ou un autre indicateur de chargement
-    }
+   
 
     return (
         <Card>

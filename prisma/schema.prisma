@@ -51,6 +51,7 @@ model Competition {
   clubId          Int
   club            Club      @relation(fields: [clubId], references: [id])
   matches         Match[]
+  image           String?  // Image URL, nullable
 }
 
 enum RoundVictoryType {

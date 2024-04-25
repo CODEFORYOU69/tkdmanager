@@ -2,10 +2,12 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { useNotification } from './NotificationService';
+import { CldUploadWidget } from 'next-cloudinary';
 
 const AddCompetitionModal = ({ open, handleClose }) => {
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
 
   const { notify } = useNotification();
 
@@ -22,6 +24,7 @@ const AddCompetitionModal = ({ open, handleClose }) => {
       body: JSON.stringify({
         name: name,
         date: date,
+        image: imageUrl,
       }),
     });
 
@@ -36,6 +39,31 @@ const AddCompetitionModal = ({ open, handleClose }) => {
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Add New Competition</DialogTitle>
+      <CldUploadWidget uploadPreset="tkdmanagerimage"
+        onSuccess={(results) => {
+          console.log('Public ID', results.info.url);
+          setImageUrl(results.info.url);
+        }}>
+        {({ open }) => {
+          return (
+            <button
+              style={{
+                border: '2px solid black', // Sets a black border around the button
+                padding: '10px 20px', // Adds some padding inside the button for better spacing
+                color: 'white', // Sets the text color to white
+                cursor: 'pointer',
+                margin: '25px', // Adds some margin around the button 
+                borderRadius: '5px', // Rounds the corners of the button
+                backgroundColor: 'black', // Sets the background color to black
+
+                // Changes the cursor to a pointer on hover
+              }}
+              onClick={() => open()}>
+              Upload profil Image
+            </button>
+          );
+        }}
+      </CldUploadWidget>
       <DialogContent>
         <TextField
           autoFocus

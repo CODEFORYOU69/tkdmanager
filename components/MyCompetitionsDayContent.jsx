@@ -289,7 +289,7 @@ export default function CompetitionDayContent() {
                         <Typography variant="body1">
                             Fight #{match.fightNumber} - {match.fighter.firstName} {match.fighter.lastName}
                         </Typography>
-                        <Avatar src={match.fighter.image} sx={{ width: 100, height: 100, margin: 2 }} />
+                        <Avatar src={match.fighter.image} sx={{ width: 100, height: 100, margin: 2, backgroundColor: 'white' }} />
                         <Typography variant="body1" gutterBottom>
                             Rounds Recorded: {roundSavedData[match.id] ? roundSavedData[match.id].length : 0}
                         </Typography>
@@ -302,7 +302,7 @@ export default function CompetitionDayContent() {
                         <Typography variant="h6" gutterBottom>
                             Fight #{match.fightNumber} - {match.fighter.firstName} {match.fighter.lastName}
                         </Typography>
-                        <Avatar src={match.fighter.image} sx={{ width: 100, height: 100, margin: 2 }} />
+                        <Avatar src={match.fighter.image} sx={{ width: 100, height: 100, margin: 2, backgroundColor: 'white' }} />
                         <Typography variant="subtitle1" gutterBottom>
                             Result: {match.result}
                         </Typography>

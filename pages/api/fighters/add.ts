@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const { firstName, lastName, category } = req.body;
+        const { firstName, lastName, category, imageUrl } = req.body;
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) {
             return res.status(401).json({ message: "Unauthorized" });
@@ -21,7 +21,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         // Continue avec la création si tout est valide
         try {
             const newFighter = await prisma.fighter.create({
-                data: { firstName, lastName, category, clubId },
+                data: { firstName, lastName, category, clubId, image: imageUrl},
             });
             res.status(201).json(newFighter);
         } catch (error: any) {

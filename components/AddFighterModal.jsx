@@ -2,6 +2,15 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { useNotification } from './NotificationService';
+import { Dashboard } from '@uppy/react';
+import Uppy from '@uppy/core';
+import XHRUpload from '@uppy/xhr-upload';
+import Webcam from '@uppy/webcam';
+import ImageEditor from '@uppy/image-editor';
+import '@uppy/core/dist/style.css';
+import '@uppy/dashboard/dist/style.css';
+import '@uppy/image-editor/dist/style.css';
+// import { CldUploadWidget } from 'next-cloudinary';
 
 
 const categories = {
@@ -36,9 +45,43 @@ const AddFighterModal = ({ open, handleClose }) => {
     const [sex, setSex] = useState('');
     const [ageCategory, setAgeCategory] = useState('');
     const [weightCategory, setWeightCategory] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
 
     const { notify } = useNotification();
 
+    const uppy = new Uppy({
+        restrictions: { maxNumberOfFiles: 1 },
+        autoProceed: false
+    });
+
+    uppy.use(Webcam);
+    uppy.use(ImageEditor);
+    uppy.use(XHRUpload, {
+        endpoint: '/api/removeBackground',
+        fieldName: 'file',
+        formData: true,
+        method: 'post',
+        bundle: true,
+        headers: {
+            accept: 'application/json',
+        },
+        onError: (error) => {
+            notify(`Error: ${error.message}`, { variant: "error" });
+        },
+
+    });
+
+    uppy.on('upload-success', (file, response) => {
+        console.log('Successful upload:', file);
+        console.log('Server response:', response.body);
+        if (response.status === 200) {
+            const responseData = response.body;
+            setImageUrl(responseData.imageUrl);
+            if (responseData.imageUrl) {
+                console.log('Image processed and uploaded successfully:', responseData.imageUrl);
+            }
+        }
+    });
 
     const handleSave = async () => {
         const category = `${sex}-${ageCategory}-${weightCategory}`;
@@ -53,6 +96,7 @@ const AddFighterModal = ({ open, handleClose }) => {
                 firstName: firstName,
                 lastName: lastName,
                 category: category,
+                imageUrl: imageUrl,
             }),
         });
 
@@ -69,6 +113,11 @@ const AddFighterModal = ({ open, handleClose }) => {
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Add New Fighter</DialogTitle>
             <DialogContent>
+                <Dashboard
+                    uppy={uppy}
+                    proudlyDisplayPoweredByUppy={false}
+                    plugins={['Webcam', 'ImageEditor']}
+                />
                 <TextField
                     autoFocus
                     margin="dense"
@@ -119,6 +168,30 @@ const AddFighterModal = ({ open, handleClose }) => {
                     </Select>
                 </FormControl>
             </DialogContent>
+            {/* <CldUploadWidget
+                uploadPreset="background_removal"
+                sources={['local', 'url', 'camera']}  // Vous pouvez spécifier d'où les images peuvent être téléchargées
+                onSuccess={(results) => {
+                    console.log('Public ID', results.info.public_id);
+                    setImageUrl(results.info.secure_url);  // Utilisez `secure_url` pour obtenir l'URL HTTPS de l'image
+                }}>
+                {({ open }) => (
+                    <button
+                        style={{
+                            border: '2px solid black',
+                            padding: '10px 20px',
+                            color: 'white',
+                            cursor: 'pointer',
+                            margin: '25px',
+                            borderRadius: '5px',
+                            backgroundColor: 'black',
+                        }}
+                        onClick={() => open()}>
+                        Upload Profile Image
+                    </button>
+                )}
+            </CldUploadWidget> */}
+
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
                 <Button onClick={handleSave}>Save</Button>

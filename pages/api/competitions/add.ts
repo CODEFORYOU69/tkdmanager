@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const { name, date } = req.body;
+        const { name, date, image } = req.body;
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) {
             return res.status(401).json({ message: "Unauthorized" });
@@ -25,6 +25,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                     name,
                     date: new Date(date),
                     clubId: clubId,
+                    image
                 },
             });
             res.status(201).json(newCompetition);
