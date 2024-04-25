@@ -27,7 +27,6 @@ export const AuthProvider = ({ children }) => {
                     }
                 });
                 const data = await response.json();
-                console.log('data', data);
                 setProfile(prev => ({
                     ...prev,
                     name: data.name,
@@ -44,7 +43,6 @@ if (role === 'user' && data.clubId) {
         }
     });
     const clubData = await clubResponse.json();
-    console.log('clubData', clubData);
     setProfile(prev => ({
         ...prev,
         clubName: clubData.name,
@@ -56,7 +54,6 @@ if (role === 'user' && data.clubId) {
                 console.error('Error fetching profile or club info:', error);
             }
         }
-        console.log('Profile fetched', );
     };
 
     // Fonctions pour gérer la connexion et la déconnexion

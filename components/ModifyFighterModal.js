@@ -42,13 +42,12 @@ const ModifyFighterModal = ({ fighter, open, onClose }) => {
   });
 
   uppy.on('upload-success', (file, response) => {
-  console.log('Successful upload:', file);
-  console.log('Server response:', response.body);
+  
   if (response.status === 200) {
     const responseData = response.body;
     setImageUrl(responseData.imageUrl);
     if (responseData.imageUrl) {
-      console.log('Image processed and uploaded successfully:', responseData.imageUrl);
+      console.log('Image processed and uploaded successfully:');
     }
   }
 });

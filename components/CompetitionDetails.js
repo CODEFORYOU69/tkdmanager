@@ -16,7 +16,6 @@ const CompetitionDetails = ({ competition }) => {
                 })));
             })
             .catch(err => console.error('Failed to load fighters', err));
-                        console.log("fighters", fighters);
 
     }, [competition]);
 

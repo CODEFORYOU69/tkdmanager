@@ -13,7 +13,6 @@ export default async function handler(req, res) {
         const { name, email, password, imageUrl } = req.body;
         const profileType = req.query.profileType;
         const model = modelMap[profileType];
-        console.log("IMAGE", imageUrl);
 
         if (!model) {
             return res.status(400).json({ message: 'Invalid profile type' });

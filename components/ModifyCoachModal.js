@@ -61,7 +61,6 @@ const ModifyCoachModal = ({ coach, open, onClose }) => {
         <Avatar src={imageUrl} alt="avatar" />
          <CldUploadWidget uploadPreset="tkdmanagerimage"
                 onSuccess={(results) => {
-                    console.log('Public ID', results.info.url);
                     setImageUrl(results.info.url);
                   }}>
   {({ open }) => {

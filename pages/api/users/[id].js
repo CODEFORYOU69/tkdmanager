@@ -27,7 +27,6 @@ export default async function handler(req, res) {
             // Code pour mettre à jour un combattant
             try {
                 const { name, password, imageUrl } = req.body;
-                console.log("req.body",req.body)
                 const hashedPassword = await bcrypt.hash(password, 10);
 
                 const updatedUser = await prisma.user.update({

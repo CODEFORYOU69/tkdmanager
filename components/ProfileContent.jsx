@@ -52,7 +52,6 @@ const Profile = () => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log('data', data);
                 notify?.('Fighter added successfully', { variant: 'success' });
             })
             .catch(error => {
@@ -93,7 +92,6 @@ const Profile = () => {
                 />
                 <CldUploadWidget uploadPreset="tkdmanagerimage"
                     onSuccess={(results) => {
-                        console.log('Public ID', results.info.url);
                         setImageUrl(results.info.url);
                     }}>
                     {({ open }) => {

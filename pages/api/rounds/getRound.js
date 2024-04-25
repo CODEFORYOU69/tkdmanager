@@ -21,7 +21,7 @@ export default async function handler(req, res) {
             if (rounds.length > 0) {
                 res.status(200).json(rounds);
             } else {
-                res.status(404).json({ message: 'No rounds found for this match' });
+                return
             }
         } catch (error) {
             console.error('Error fetching rounds:', error);

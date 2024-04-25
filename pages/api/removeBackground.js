@@ -62,7 +62,6 @@ export default async function handler(req, res) {
     }
 
     // Répondre avec l'URL de l'image sur Cloudinary
-    console.log(cloudinaryResponse.data);
     res.status(200).json({ imageUrl: cloudinaryResponse.data.secure_url });
   } catch (error) {
     console.error("API Error:", error);

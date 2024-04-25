@@ -41,7 +41,6 @@ const AddCompetitionModal = ({ open, handleClose }) => {
       <DialogTitle>Add New Competition</DialogTitle>
       <CldUploadWidget uploadPreset="tkdmanagerimage"
         onSuccess={(results) => {
-          console.log('Public ID', results.info.url);
           setImageUrl(results.info.url);
         }}>
         {({ open }) => {

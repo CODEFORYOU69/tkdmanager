@@ -10,7 +10,6 @@ import ImageEditor from '@uppy/image-editor';
 import '@uppy/core/dist/style.css';
 import '@uppy/dashboard/dist/style.css';
 import '@uppy/image-editor/dist/style.css';
-// import { CldUploadWidget } from 'next-cloudinary';
 
 
 const categories = {
@@ -72,13 +71,12 @@ const AddFighterModal = ({ open, handleClose }) => {
     });
 
     uppy.on('upload-success', (file, response) => {
-        console.log('Successful upload:', file);
-        console.log('Server response:', response.body);
+      
         if (response.status === 200) {
             const responseData = response.body;
             setImageUrl(responseData.imageUrl);
             if (responseData.imageUrl) {
-                console.log('Image processed and uploaded successfully:', responseData.imageUrl);
+                console.log('Image processed and uploaded successfully:',);
             }
         }
     });
@@ -168,29 +166,7 @@ const AddFighterModal = ({ open, handleClose }) => {
                     </Select>
                 </FormControl>
             </DialogContent>
-            {/* <CldUploadWidget
-                uploadPreset="background_removal"
-                sources={['local', 'url', 'camera']}  // Vous pouvez spécifier d'où les images peuvent être téléchargées
-                onSuccess={(results) => {
-                    console.log('Public ID', results.info.public_id);
-                    setImageUrl(results.info.secure_url);  // Utilisez `secure_url` pour obtenir l'URL HTTPS de l'image
-                }}>
-                {({ open }) => (
-                    <button
-                        style={{
-                            border: '2px solid black',
-                            padding: '10px 20px',
-                            color: 'white',
-                            cursor: 'pointer',
-                            margin: '25px',
-                            borderRadius: '5px',
-                            backgroundColor: 'black',
-                        }}
-                        onClick={() => open()}>
-                        Upload Profile Image
-                    </button>
-                )}
-            </CldUploadWidget> */}
+           
 
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>

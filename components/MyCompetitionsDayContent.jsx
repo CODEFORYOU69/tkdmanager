@@ -82,12 +82,9 @@ export default function CompetitionDayContent() {
                     const sortedMatches = data.sort((a, b) => a.fightNumber - b.fightNumber);
                     const ongoing = {};
                     const completed = [];
-                    console.log("sortedMatches", sortedMatches);
-                    console.log("ongoing", ongoing);
-                    console.log("completed", completed);
+                    
                     sortedMatches.forEach(match => {
                         const area = Math.floor(match.fightNumber / 100).toString();
-                        console.log("area", area);
 
                         if (match.result === null && !match.isCancelled) {
                             if (!ongoing[area]) ongoing[area] = [];
@@ -150,7 +147,6 @@ export default function CompetitionDayContent() {
                         acc[result.matchId] = result.rounds;
                         return acc;
                     }, {});
-                    console.log("roundData", roundsByMatch)
 
                     setRoundData(roundsByMatch);
                 })
@@ -177,18 +173,11 @@ export default function CompetitionDayContent() {
                     results.forEach(result => {
                         newRoundSavedData[result.matchId] = result.rounds;
                     });
-                    console.log("newRoundSavedData", newRoundSavedData);
                     setRoundSavedData(newRoundSavedData);
                 })
                 .catch(err => console.error('Error fetching all rounds:', err));
         }
     }, [ongoingMatches]);  // Cette dépendance devrait être suffisante pour rafraîchir les données lors des changements
-
-
-    // setRoundSavedData(roundData); to display the number of round saved for each match in ongoing match
-
-
-
 
     const handleCurrentFightChange = (area, value) => {
         setCurrentFightNumber(prev => ({ ...prev, [area]: value }));

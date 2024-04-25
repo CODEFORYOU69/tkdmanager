@@ -12,12 +12,9 @@ const modelMap = {
 export default async function handler(req, res) {
     if (req.method === 'GET') {
         const { profileType } = req.query; // Utilisez req.query pour accéder aux paramètres dans Next.js
-        console.log("profileType", profileType)
         //get user id from bearear token
          const token = req.headers.authorization?.split(' ')[1];
-         console.log("token in profile", token)
          const { email } = jwt.verify(token, process.env.JWT_SECRET);
-         console.log("email in token", email)
             
 
 
@@ -31,7 +28,6 @@ export default async function handler(req, res) {
                 where: { email: email },
             });
             if (profile) {
-                console.log("profile", profile)
                 res.status(200).json(profile);
             } else {
                 res.status(404).json({ message: 'Profile not found' });
