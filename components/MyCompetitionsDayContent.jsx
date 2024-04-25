@@ -252,7 +252,9 @@ export default function CompetitionDayContent() {
             </Drawer>
 
             <Box flex={1} p={2}>
-                <Typography variant="h4" sx={{ marginBottom: 2 }}>Competition Day Viewer</Typography>
+                <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
+                    <Typography variant="h4" sx={{ textAlign: 'center' }}>Competition Day Viewer</Typography>
+                </Box>  
                 <Select
                     value={selectedCompetition?.id || ''}
                     onChange={handleCompetitionChange}

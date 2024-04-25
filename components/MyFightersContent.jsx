@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar } from '@mui/material';
+import { Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModifyFighterModal from './ModifyFighterModal';
@@ -66,7 +66,10 @@ const MyFightersContent = () => {
 
   return (
     <Container maxWidth="sm">
-      <Typography variant="h4" gutterBottom>My Fighters</Typography>
+      <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
+
+        <Typography variant="h4" sx={{ textAlign: 'center' }}>My Fighters</Typography>
+      </Box>
       <List>
         {fighters.map(fighter => (
           <ListItem key={fighter.id} secondaryAction={

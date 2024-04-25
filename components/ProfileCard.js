@@ -5,6 +5,16 @@ import { useAuth } from './AuthProvider'; // Assurez-vous que le chemin d'import
 const ProfileCard = () => {
     const { profile } = useAuth();
 
+    if (!profile) {
+        return (
+            <Card>
+                <CardContent>
+                    <Typography variant="body1">Loading profile...</Typography>
+                </CardContent>
+            </Card>
+        );
+    }
+
     // Gérer l'affichage conditionnel lorsque les données du profil ne sont pas encore chargées
    
 

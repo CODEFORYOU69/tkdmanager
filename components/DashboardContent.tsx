@@ -32,13 +32,9 @@ const DashboardContent = () => {
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
-        <Typography variant="h4" gutterBottom>
-          Dashboard
-        </Typography>
-        {/* Assurez-vous que le clubName est géré correctement ailleurs dans votre app */}
-        {/* <Typography variant="subtitle1">{clubName}</Typography> */}
-      </Box>
+      <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
+                <Typography variant="h4" sx={{ textAlign: 'center' }}>Dashboard</Typography>
+            </Box>   
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Button variant="contained" onClick={handleAddUserOpen}>
         Add Coach

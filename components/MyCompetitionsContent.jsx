@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Typography, Select, MenuItem, List, ListItem, ListItemText, Paper, Avatar } from '@mui/material';
+import { Button, Container, Typography, Select, MenuItem, List, ListItem, ListItemText, Paper, Avatar, Box } from '@mui/material';
 import AddFightModal from './AddFightModal';
 
 const MyCompetitionsContent = () => {
@@ -38,13 +38,16 @@ const MyCompetitionsContent = () => {
 
     return (
         <Container maxWidth="md">
-            <Typography variant="h4" gutterBottom>Organise my fight</Typography>
+            <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
+
+                <Typography variant="h4" sx={{ textAlign: 'center' }}>Organise my fight</Typography>
+            </Box> 
             <Select value={selectedCompetition?.id || ''} onChange={handleSelectCompetition} fullWidth>
-                {competitions.map(competition => (
+                {competitions && competitions[0] && competitions.map(competition => (
                     <MenuItem key={competition.id} value={competition.id}>{competition.name}</MenuItem>
                 ))}
             </Select>
-            <Button variant="contained" color="primary" onClick={handleOpenModal}>Add Fighter from List</Button>
+            <Button variant="contained" color="primary" sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }} onClick={handleOpenModal}>Add Fighter from List</Button>
             {selectedCompetition && (
                 <AddFightModal open={modalOpen} onClose={handleCloseModal} competitionId={selectedCompetition.id} />
             )}

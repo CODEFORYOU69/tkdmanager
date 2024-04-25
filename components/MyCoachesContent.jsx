@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar } from '@mui/material';
+import { Button, Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModifyCoachModal from './ModifyCoachModal';
@@ -74,8 +74,9 @@ const MyCoachesContent = () => {
         <LoadingWithImage />
       ) : (
     <Container maxWidth="sm">
-      <Typography variant="h4" gutterBottom>My Coaches</Typography>
-      <List>
+            <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
+              <Typography variant="h4" sx={{ textAlign: 'center' }}>My Coachs</Typography>
+            </Box>       <List>
         {coaches.map(coach => (
           <ListItem key={coach.id} secondaryAction={
             <>

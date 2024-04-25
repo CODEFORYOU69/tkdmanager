@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
                     role: role,
                 }));
         
-        if (role && token) {
+        if (role  && token) {
             try {
                 const response = await fetch(`/api/profile?profileType=${role}`, {
                     headers: {
@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }) => {
                     }
                 });
                 const data = await response.json();
+                
                 setProfile(prev => ({
                     ...prev,
                     name: data.name,

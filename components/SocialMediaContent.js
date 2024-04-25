@@ -7,8 +7,7 @@ const SocialMedia = () => {
     const [selectedCompetition, setSelectedCompetition] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-const [open, setOpen] = useState(false);
-
+    const [open, setOpen] = useState(false);
 
     const fetchData = useCallback(() => {
         setLoading(true);
@@ -47,59 +46,57 @@ const [open, setOpen] = useState(false);
         fetchData();
     }, [fetchData]);
 
-  const handleOpen = (competition) => {
-    setSelectedCompetition(competition);
-    setOpen(true);
-};
+    const handleOpen = (competition) => {
+        setSelectedCompetition(competition);
+        setOpen(true);
+    };
 
-const handleClose = () => {
-    setOpen(false);
-};
-
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
-           <Grid container spacing={2}>
-        {loading && (
-            <Grid item xs={12}>
+        <Grid container spacing={2} mt={2} direction="column" alignItems="center">
+            <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
+                    <Typography variant="h4" sx={{ textAlign: 'center' }}>Social Media Image</Typography>
+                </Box> 
+            {loading && (
                 <CircularProgress />
-            </Grid>
-        )}
-        {error && (
-            <Grid item xs={12}>
+            )}
+            {error && (
                 <Typography color="error">{error}</Typography>
-            </Grid>
-        )}
-        {competitions && competitions.map(competition => (
-            <Grid item key={competition.id}>
-                <Button variant="contained" color="primary" onClick={() => handleOpen(competition)}>
-                    {competition.name} generate social media picture
-                </Button>
-            </Grid>
-        ))}
-        <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-title"
-            aria-describedby="modal-description"
-        >
-            <Box sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: 400,
-                bgcolor: 'background.paper',
-                border: '2px solid #000',
-                boxShadow: 24,
-                p: 4
-            }}>
-                {selectedCompetition && (
-                    <CompetitionDetails competition={selectedCompetition} />
-                )}
-            </Box>
-        </Modal>
-    </Grid>
-);
+            )}
+            {competitions && competitions.map(competition => (
+                <Grid item xs={12} sm={6} md={8} key={competition.id} sx={{ width: '90%' }}>
+                    <Button variant="contained" color="primary" fullWidth onClick={() => handleOpen(competition)}>
+                        {competition.name} generate images
+                    </Button>
+                </Grid>
+            ))}
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+            >
+                <Box sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 400,
+                    bgcolor: 'background.paper',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    p: 4
+                }}>
+                    {selectedCompetition && (
+                        <CompetitionDetails competition={selectedCompetition} />
+                    )}
+                </Box>
+            </Modal>
+        </Grid>
+    );
 };
 
 export default SocialMedia;

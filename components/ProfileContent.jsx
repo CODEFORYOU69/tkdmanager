@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, Container, Typography } from '@mui/material';
+import { Button, TextField, Container, Typography, Box } from '@mui/material';
 import { CldUploadWidget } from 'next-cloudinary';
 import { useNotification } from './NotificationService';
 import { useRouter } from 'next/router';
@@ -71,14 +71,14 @@ const Profile = () => {
                 console.error('Error updating profile:', error);
                 notify?.('Error updating profile', { variant: 'error' });
             });
-            router.push('/dashboard');
     };
 
 
     return (
         <Container maxWidth="sm">
-            <Typography variant="h4">Edit {profileType === 'user' ? 'User' : 'Club'} Profile</Typography>
-            <form onSubmit={handleSubmit}>
+            <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
+                <Typography variant="h4" sx={{ textAlign: 'center' }}>Edit {profileType === 'user' ? 'User' : 'Club'} Profile</Typography>
+            </Box>            <form onSubmit={handleSubmit}>
                 <TextField
                     fullWidth
                     label="Name"
@@ -110,17 +110,25 @@ const Profile = () => {
                     }}>
                     {({ open }) => {
                         return (
-                            <button onClick={() => open()}>
-                                Upload profil Image
+                            <button
+                                style={{
+                                    border: '2px solid black', // Sets a black border around the button
+                                    padding: '10px 20px', // Adds some padding inside the button for better spacing
+                                    color: 'white', // Sets the text color to white
+                                    cursor: 'pointer',
+                                    margin: '25px', // Adds some margin around the button 
+                                    borderRadius: '5px', // Rounds the corners of the button
+                                    backgroundColor: 'black', // Sets the background color to black
+
+                                    // Changes the cursor to a pointer on hover
+                                }}
+                                onClick={() => open()}>
+                                Upload Profile Image
                             </button>
                         );
                     }}
                 </CldUploadWidget>
-                {/* <Typography variant="subtitle1">Profile Image</Typography>
-                <input
-                    type="file"
-                    onChange={handleImageChange}
-                /> */}
+
                 <Button type="submit" color="primary" variant="contained">
                     Save Changes
                 </Button>
