@@ -12,45 +12,43 @@ import '@uppy/image-editor/dist/style.css';
 import { useNotification } from './NotificationService';
 
 const ModifyFighterModal = ({ fighter, open, onClose }) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [category, setCategory] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [category, setCategory] = useState("");
   const [imageUrl, setImageUrl] = useState(null);
 
   const { notify } = useNotification();
 
   const uppy = new Uppy({
     restrictions: { maxNumberOfFiles: 1 },
-    autoProceed: false
+    autoProceed: false,
   });
 
   uppy.use(Webcam);
   uppy.use(ImageEditor);
   uppy.use(XHRUpload, {
-    endpoint: '/api/removeBackground',
-    fieldName: 'file',
+    endpoint: "/api/removeBackground",
+    fieldName: "file",
     formData: true,
-    method: 'post',
+    method: "post",
     bundle: true,
     headers: {
-      accept: 'application/json',
+      accept: "application/json",
     },
     onError: (error) => {
       notify(`Error: ${error.message}`, { variant: "error" });
     },
-
   });
 
-  uppy.on('upload-success', (file, response) => {
-  
-  if (response.status === 200) {
-    const responseData = response.body;
-    setImageUrl(responseData.imageUrl);
-    if (responseData.imageUrl) {
-      console.log('Image processed and uploaded successfully:');
+  uppy.on("upload-success", (file, response) => {
+    if (response.status === 200) {
+      const responseData = response.body;
+      setImageUrl(responseData.imageUrl);
+      if (responseData.imageUrl) {
+        console.log("Image processed and uploaded successfully:");
+      }
     }
-  }
-});
+  });
 
   useEffect(() => {
     if (fighter) {
@@ -62,16 +60,16 @@ const ModifyFighterModal = ({ fighter, open, onClose }) => {
 
   const handleUpdate = async () => {
     const response = await fetch(`/api/fighters/${fighter.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ firstName, lastName, category, imageUrl })
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firstName, lastName, category, imageUrl }),
     });
 
     if (response.ok) {
-      notify('Fighter updated successfully', { variant: "success" });
+      notify("Fighter updated successfully", { variant: "success" });
       onClose(true);
     } else {
-      notify('Failed to update fighter', { variant: "error" });
+      notify("Failed to update fighter", { variant: "error" });
     }
   };
 
@@ -82,7 +80,8 @@ const ModifyFighterModal = ({ fighter, open, onClose }) => {
         <Dashboard
           uppy={uppy}
           proudlyDisplayPoweredByUppy={false}
-          plugins={['Webcam', 'ImageEditor']}
+          plugins={["Webcam", "ImageEditor"]}
+          height={250}
         />
         <TextField
           margin="dense"

@@ -51,7 +51,11 @@ const MyCompetitionsContent = () => {
             {selectedCompetition && (
                 <AddFightModal open={modalOpen} onClose={handleCloseModal} competitionId={selectedCompetition.id} />
             )}
-            <List sx={{ mt: 2 }}>
+            <List sx={{
+                mt: 2,
+                overflow: 'auto',  // Enable scrolling
+                maxHeight: 'calc(100vh - 500px)',  // Adjust the height accordingly
+            }}>
                 {fighters.map(fighter => (
                     <Paper key={fighter.id} elevation={3} sx={{ my: 2, p: 2, borderRadius: 2 }}>
                         <Paper key={fighter.id} elevation={3} sx={{ my: 2, p: 2, borderRadius: 2, display: 'flex', alignItems: 'center' }}>

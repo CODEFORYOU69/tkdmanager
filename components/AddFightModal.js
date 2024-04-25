@@ -1,19 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, MenuItem, Select, InputLabel, FormControl, IconButton } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, MenuItem, Select, InputLabel, FormControl, IconButton, Box } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { useNotification } from './NotificationService';
 
+const ColorButton = ({ selectedColor, onSelectColor, color }) => (
+    <Button
+        style={{
+            backgroundColor: color,
+            minWidth: 140,
+            minHeight: 30,
+            marginTop: 15,
+
+            border: selectedColor === color ? '2px solid black' : '1px solid grey'
+        }}
+        onClick={() => onSelectColor(color)}
+    />
+);
 
 const AddFightModal = ({ open, onClose, competitionId }) => {
-    const [fights, setFights] = useState([{ fightNumber: '', color: '' }]);
+    const [fights, setFights] = useState([{ fightNumber: '', color: 'Blue' }]);
     const [fighters, setFighters] = useState([]);
     const [selectedFighterId, setSelectedFighterId] = useState('');
 
     const { notify } = useNotification();
 
-
-    const fetchData = () => {
+   const fetchData = () => {
         const token = localStorage.getItem('token');
         if (!token) {
             console.error('No token found');
@@ -70,7 +82,7 @@ const AddFightModal = ({ open, onClose, competitionId }) => {
     };
 
     const handleAddFight = () => {
-        setFights([...fights, { fightNumber: '', color: '' }]);
+        setFights([...fights, { fightNumber: '', color: 'Blue' }]);
     };
 
     const handleRemoveFight = (index) => {
@@ -103,28 +115,24 @@ const AddFightModal = ({ open, onClose, competitionId }) => {
                     </Select>
                 </FormControl>
                 {fights.map((fight, index) => (
-                    <div key={index} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
+                    <Box key={index} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
                         <TextField
                             label="Fight Number"
                             type="number"
                             value={fight.fightNumber}
                             onChange={(e) => handleChangeFight(index, 'fightNumber', e.target.value)}
-                            style={{ marginRight: 10 }}
+                            fullWidth
                         />
-                        <Select
-                            value={fight.color}
-                            onChange={(e) => handleChangeFight(index, 'color', e.target.value)}
-                            style={{ marginRight: 10 }}
-                        >
-                            <MenuItem value="Blue">Blue</MenuItem>
-                            <MenuItem value="Red">Red</MenuItem>
-                        </Select>
+                        <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
+                            <ColorButton selectedColor={fight.color} onSelectColor={(color) => handleChangeFight(index, 'color', color)} color="Red" />
+                            <ColorButton selectedColor={fight.color} onSelectColor={(color) => handleChangeFight(index, 'color', color)} color="Blue" />
+                        </Box>
                         {index > 0 && (
-                            <IconButton onClick={() => handleRemoveFight(index)}>
+                            <IconButton onClick={() => handleRemoveFight(index)} sx={{ mt: 1 }}>
                                 <RemoveCircleIcon />
                             </IconButton>
                         )}
-                    </div>
+                    </Box>
                 ))}
                 <Button startIcon={<AddCircleIcon />} onClick={handleAddFight}>
                     Add Another Fight

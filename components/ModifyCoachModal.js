@@ -40,6 +40,31 @@ const ModifyCoachModal = ({ coach, open, onClose }) => {
     <Dialog open={open} onClose={() => onClose()}>
       <DialogTitle>Edit Coach</DialogTitle>
       <DialogContent>
+        <Avatar src={imageUrl} alt="avatar" />
+        <CldUploadWidget uploadPreset="tkdmanagerimage"
+        onSuccess={(results) => {
+          setImageUrl(results.info.url);
+        }}>
+        {({ open }) => {
+          return (
+            <button
+              style={{
+                border: '2px solid black', // Sets a black border around the button
+                padding: '10px 20px', // Adds some padding inside the button for better spacing
+                color: 'white', // Sets the text color to white
+                cursor: 'pointer',
+                margin: '25px', // Adds some margin around the button 
+                borderRadius: '5px', // Rounds the corners of the button
+                backgroundColor: 'black', // Sets the background color to black
+
+                // Changes the cursor to a pointer on hover
+              }}
+              onClick={() => open()}>
+              Upload profil Image
+            </button>
+          );
+        }}
+      </CldUploadWidget>
         <TextField
           margin="dense"
           label="Name"
@@ -58,19 +83,7 @@ const ModifyCoachModal = ({ coach, open, onClose }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Avatar src={imageUrl} alt="avatar" />
-         <CldUploadWidget uploadPreset="tkdmanagerimage"
-                onSuccess={(results) => {
-                    setImageUrl(results.info.url);
-                  }}>
-  {({ open }) => {
-    return (
-      <button onClick={() => open()}>
-        Upload profil Image
-      </button>
-    );
-  }}
-</CldUploadWidget>
+        
       </DialogContent>
       <DialogActions>
         <Button onClick={() => onClose()}>Cancel</Button>
