@@ -3,12 +3,18 @@ import React, { useState, useEffect } from 'react';
 import { Button, TextField, Container, Typography } from '@mui/material';
 import { CldUploadWidget } from 'next-cloudinary';
 import { useNotification } from './NotificationService';
+import { useRouter } from 'next/router';
 
 
 
 const Profile = () => {
     const [profile, setProfile] = useState({ name: '', email: '', imageUrl: '' });
     const [imageUrl, setImageUrl] = useState(null);
+    const [password, setPassword] = useState('');
+
+    const router = useRouter();
+
+
     // Initialement définir 'user' ou 'club' basé sur ce qui est stocké dans localStorage
     const [profileType, setProfileType] = useState(localStorage.getItem('role').replace(/"/g, ''));
 
@@ -22,13 +28,20 @@ const Profile = () => {
             }
         })
             .then(res => res.json())
-            .then(data => setProfile(data))
+            .then(data => {
+                const { name, email, imageUrl } = data;
+                setProfile({ name, email, imageUrl });
+            })
             .catch(err => console.error('Error fetching profile:', err));
     }, [profileType]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setProfile(prev => ({ ...prev, [name]: value }));
+        if (name === 'password') {
+            setPassword(value);
+        } else {
+            setProfile(prev => ({ ...prev, [name]: value }));
+        }
     };
 
 
@@ -58,6 +71,7 @@ const Profile = () => {
                 console.error('Error updating profile:', error);
                 notify?.('Error updating profile', { variant: 'error' });
             });
+            router.push('/dashboard');
     };
 
 
@@ -86,7 +100,7 @@ const Profile = () => {
                     label="Password"
                     name="password"
                     type="password"
-                    value={profile.password}
+                    value={password}
                     onChange={handleInputChange}
                     margin="normal"
                 />
