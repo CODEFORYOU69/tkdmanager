@@ -79,21 +79,24 @@ const SocialMedia = () => {
                 aria-labelledby="modal-title"
                 aria-describedby="modal-description"
             >
-                <Box sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 400,
-                    bgcolor: 'background.paper',
-                    border: '2px solid #000',
-                    boxShadow: 24,
-                    p: 4
-                }}>
-                    {selectedCompetition && (
-                        <CompetitionDetails competition={selectedCompetition} />
-                    )}
-                </Box>
+               <Box sx={{
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400, // ou '80vw' pour s'adapter à la largeur de la vue
+    maxHeight: '90vh', // Limite la hauteur à 90% de la hauteur de la vue
+    overflowY: 'auto', // Permet le défilement vertical si nécessaire
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4
+}}>
+    {selectedCompetition && (
+        <CompetitionDetails competition={selectedCompetition} />
+    )}
+</Box>
+
             </Modal>
         </Grid>
     );
