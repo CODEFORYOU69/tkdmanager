@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/AddUserForm.jsx", "components/MyCoachesContent.jsx", "pages/api/login.js", "components/AddFighterModal.jsx", "components/SignUpForm.jsx", "components/Login.jsx", "components/AddCompetitionModal.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/AddUserForm.jsx", "components/MyCoachesContent.jsx", "pages/api/login.js", "components/AddFighterModal.jsx", "components/SignUpForm.jsx", "components/Login.jsx", "components/AddCompetitionModal.jsx", "components/MobileNavbar.tsx"],
   "exclude": ["node_modules"]
 }

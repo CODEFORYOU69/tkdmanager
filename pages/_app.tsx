@@ -9,14 +9,20 @@ import { AuthProvider } from '../components/AuthProvider'; // Assurez-vous d'aju
 import { NotificationProvider } from "../components/NotificationService";
 
 const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#556cd6',
-      },
-      secondary: {
-        main: '#19857b',
-      },
+   palette: {
+    primary: {
+      main: '#556cd6',
     },
+    secondary: {
+      main: '#19857b',
+    },
+    error: {
+      main: '#f44336',      // rouge vif pour les erreurs
+      light: '#e57373',     // rouge plus clair
+      dark: '#d32f2f',      // rouge foncé
+      contrastText: '#fff', // texte en blanc pour une bonne lisibilité sur fond rouge
+    },
+  },
     typography: {
       fontFamily: 'Roboto, Arial, sans-serif',
       h4: {

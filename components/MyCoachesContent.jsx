@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar, Box } from '@mui/material';
+import { Grid, Container, Typography, List, ListItem, IconButton, Paper, Avatar, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModifyCoachModal from './ModifyCoachModal';
@@ -76,31 +76,38 @@ const MyCoachesContent = () => {
         <Container maxWidth="sm">
           <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
             <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>My Coachs</Typography>
-          </Box>       <List>
+          </Box>       
+          <List sx={{ width: '100%' }}>
             {coaches.map(coach => (
-              <ListItem key={coach.id} secondaryAction={
-                <>
-                  <IconButton edge="end" onClick={() => handleOpenModify(coach)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton edge="end" onClick={() => handleOpenDelete(coach)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </>
-              }>
-                <Paper style={{ padding: '10px', margin: '5px 0', backgroundColor: '#f5f5f5', borderRadius: '15px', width: '100%', minHeight: '100px' }}>
-                  <Avatar src={coach.image} alt={coach.firstName} width={100} height={100} />
-
-                  <ListItemText
-                    //color text in black
-                    color='textPrimary'
-                    primary={`${coach.name} `}
-                    primaryTypographyProps={{ style: { color: 'black' } }}
-
-
-                  />
+              <ListItem key={coach.id} sx={{ px: 0 }}>
+                <Paper elevation={3} sx={{
+                  p: 2,
+                  m: 1,
+                  backgroundColor: '#f5f5f5',
+                  borderRadius: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '100%'
+                }}>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item>
+                      <Avatar src={coach.image} alt={coach.firstName} sx={{ width: 100, height: 100 }} />
+                    </Grid>
+                    <Grid item xs>
+                      <Typography variant="h6" color="text.primary">
+                        {coach.name}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <IconButton color="primary" onClick={() => handleOpenModify(coach)}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton color="error" onClick={() => handleOpenDelete(coach)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
                 </Paper>
-
               </ListItem>
             ))}
           </List>

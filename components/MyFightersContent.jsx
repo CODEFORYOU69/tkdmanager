@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar, Box } from '@mui/material';
+import { Grid, Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModifyFighterModal from './ModifyFighterModal';
@@ -70,25 +70,39 @@ const MyFightersContent = () => {
 
         <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>My Fighters</Typography>
       </Box>
-      <List>
+      <List sx={{ width: '100%' }}>
         {fighters.map(fighter => (
-          <ListItem key={fighter.id} secondaryAction={
-            <>
-              <IconButton edge="end" onClick={() => handleOpenModify(fighter)}>
-                <EditIcon />
-              </IconButton>
-              <IconButton edge="end" onClick={() => handleOpenDelete(fighter)}>
-                <DeleteIcon />
-              </IconButton>
-            </>
-          }>
-            <Paper style={{ padding: '10px', margin: '5px 0', backgroundColor: '#f5f5f5', borderRadius: '15px', width: '100%', minHeight: '100px' }}>
-              <Avatar src={fighter.image} alt={fighter.firstName} width={100} height={100} />
+          <ListItem key={fighter.id} sx={{ px: 0 }} >
+            <Paper elevation={3} sx={{
+              p: 2,
+              m: 1,
+              backgroundColor: '#f5f5f5',
+              borderRadius: 2,
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%'
+            }}>
+              <Grid container spacing={2} alignItems="center">
+                <Grid item>
+                  <Avatar src={fighter.image} alt={fighter.firstName} sx={{ width: 100, height: 100 }} />
+                </Grid>
+                <Grid item xs>
               <ListItemText
                 primary={`${fighter.firstName} ${fighter.lastName}`}
                 secondary={`Category: ${fighter.category}`}
                 primaryTypographyProps={{ style: { color: 'black' } }}
+                
               />
+                </Grid>
+                <Grid item>
+                  <IconButton color="primary" onClick={() => handleOpenModify(fighter)}>
+                <EditIcon />
+              </IconButton>
+                  <IconButton color="error" onClick={() => handleOpenDelete(fighter)}>
+                <DeleteIcon />
+              </IconButton>
+                </Grid>
+              </Grid>
             </Paper>
           </ListItem>
         ))}

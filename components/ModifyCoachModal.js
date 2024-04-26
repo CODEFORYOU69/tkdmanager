@@ -14,7 +14,6 @@ const ModifyCoachModal = ({ coach, open, onClose }) => {
   useEffect(() => {
     if (coach) {
       setName(coach.name);
-      setPassword(coach.password);
       setImageUrl(coach.imageUrl);
       
     }

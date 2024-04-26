@@ -1,99 +1,85 @@
-"use client";
-import React from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem, Button } from '@mui/material';
+import React, { useState } from 'react';
+import {IconButton, Menu, MenuItem, AppBar, Toolbar, Typography, BottomNavigation, BottomNavigationAction, Paper, useMediaQuery } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi'; // Icon for Fighters
+import SportsIcon from '@mui/icons-material/Sports';  
+import SportsMartialArtsIcon from '@mui/icons-material/SportsMartialArts';
+import SocialIcon from '@mui/icons-material/PeopleOutline'; // Icon for Social Media
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import { useRouter } from 'next/router';
 
 const MobileNavbar: React.FC = () => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [value, setValue] = useState('home');
   const router = useRouter();
+  const isMobile = useMediaQuery('(max-width:600px)'); // Détermine si l'appareil est un mobile
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+
+ const handleChange = (newValue: string) => {
+  setValue(newValue);
+  router.push(`/${newValue}`);  // Utilisez `newValue` directement pour router
+};
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    router.push('/login');
+  };
+
+  const openMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const closeMenu = () => {
     setAnchorEl(null);
   };
 
-
-  const handleLogout = () => {
-      // Clear local storage or cookies here
-      localStorage.removeItem('token');  // Assuming 'token' is your authentication token
-  
-      // You could also clear cookies if they are used
-  
-      // Redirect to the login page
-      router.push('/login');
-  };
-  
+  if (isMobile) {
+    return (
+      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 10 }} elevation={3}>
+      <BottomNavigation value={value} onChange={(event, newValue) => handleChange(newValue)} showLabels>
+        <BottomNavigationAction label="Home" value="home" icon={<HomeIcon />} />
+        <BottomNavigationAction label="Profile" value="profile" icon={<AccountCircleIcon />} />
+        <BottomNavigationAction label="Dashboard" value="dashboard" icon={<DashboardIcon />} />
+        <IconButton color="inherit" onClick={openMenu} sx={{ flexDirection: 'column', width: 'auto', minWidth: 0 }}>
+          <EmojiEventsIcon sx={{ color: 'gray' }}/>
+          <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'gray' }}>Manage</Typography>
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={closeMenu}
+        >
+          <MenuItem onClick={() => { handleChange('my-coaches'); closeMenu(); }}>Coach </MenuItem>
+          <MenuItem onClick={() => { handleChange('my-fighters'); closeMenu(); }}>Fighter</MenuItem>
+          <MenuItem onClick={() => { handleChange('mycompetitions'); closeMenu(); }}>Competition</MenuItem>
+          <MenuItem onClick={() => { handleChange('competitionday'); closeMenu(); }}>Fight Day</MenuItem>
+          <MenuItem onClick={() => { handleChange('socialMedia'); closeMenu(); }}>Social</MenuItem>
+        </Menu>
+      </BottomNavigation>
+    </Paper>
+    );
+  }
 
   return (
     <AppBar position="static">
-      <Toolbar>
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          sx={{ mr: 2 }}
-          onClick={handleMenu}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Taekwondo App
+      <Toolbar sx={{ gap: 2 }}>
+        <Typography variant="h6" component="div" >
+          TKD MANAGER
         </Typography>
-        <Menu
-          id="menu-appbar"
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          open={open}
-          onClose={handleClose}
-        >
-<Link href="/" passHref>
-  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Home</MenuItem>
-</Link>
-<Link href="/profile" passHref>
-  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Profile</MenuItem>
-</Link>
-<Link href="/dashboard" passHref>
-  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Dashboard</MenuItem>
-</Link>
-<Link href="/my-coaches" passHref>
-  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Coach</MenuItem>
-</Link>
-<Link href="/my-fighters" passHref>
-  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Fighter</MenuItem>
-</Link>
-<Link href="/mycompetitions" passHref>
-  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">My Competition</MenuItem>
-</Link>
-<Link href="/competitionday" passHref>
-  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Fight Day</MenuItem>
-</Link>
-<Link href="/socialMedia" passHref>
-  <MenuItem onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Social Media</MenuItem>
-</Link>
-<Link href="/inscription" passHref>
-  <Button color="inherit" onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Signin</Button>
-</Link>
-<Link href="/login" passHref>
-  <Button color="inherit" onClick={handleClose} className="hover:bg-gray-100 text-gray-700">Login</Button>
-</Link>
-
-          <Button color="inherit" onClick={handleLogout}>Log out</Button>
-        </Menu>
+        <BottomNavigation sx={{backgroundColor: '#556cd6'}} value={value} onChange={(event, newValue) => handleChange(newValue)} showLabels>
+          <BottomNavigationAction color="primary" label="Home" value="" icon={<HomeIcon />} />
+          <BottomNavigationAction label="Profile" value="profile" icon={<AccountCircleIcon />} />
+          <BottomNavigationAction label="Dashboard" value="dashboard" icon={<DashboardIcon />} />
+          <BottomNavigationAction label="Coach" value="my-coaches" icon={<SportsIcon />} />
+          <BottomNavigationAction label="Fighter" value="my-fighters" icon={<SportsKabaddiIcon />} />
+          <BottomNavigationAction label="Competition" value="mycompetitions" icon={<EmojiEventsIcon />} />
+          <BottomNavigationAction label="Fight Day" value="competitionday" icon={<SportsMartialArtsIcon />} />
+          <BottomNavigationAction label="Social" value="socialMedia" icon={<SocialIcon />} />
+          <BottomNavigationAction label="Log out" value="login" icon={<HomeIcon />} onClick={handleLogout} />
+        </BottomNavigation>
       </Toolbar>
     </AppBar>
   );
