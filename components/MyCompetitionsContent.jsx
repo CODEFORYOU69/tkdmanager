@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Container, Typography, Select, MenuItem, List, ListItem, ListItemText, Paper, Avatar, Box } from '@mui/material';
 import AddFightModal from './AddFightModal';
+import AddCompetitionModal from './AddCompetitionModal';
+
 
 const MyCompetitionsContent = () => {
     const [competitions, setCompetitions] = useState([]);
     const [selectedCompetition, setSelectedCompetition] = useState(null);
     const [fighters, setFighters] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
+    const [openCompetitionModal, setOpenCompetitionModal] = useState(false);
+
 
     useEffect(() => {
         fetch('/api/competitions', {
@@ -16,6 +20,9 @@ const MyCompetitionsContent = () => {
             .then(setCompetitions)
             .catch(console.error);
     }, []);
+
+    const handleOpenCompetitionModal = () => setOpenCompetitionModal(true);
+    const handleCloseCompetitionModal = () => setOpenCompetitionModal(false);
 
     useEffect(() => {
         if (selectedCompetition) {
@@ -42,6 +49,9 @@ const MyCompetitionsContent = () => {
 
                 <Typography variant="h4" color="primary"  sx={{ textAlign: 'center' }}>Organise my fight</Typography>
             </Box>
+            <Button sx={{marginBottom:2}} variant="contained" color="primary" onClick={handleOpenCompetitionModal}>
+                Add Competition
+            </Button>
             <Select value={selectedCompetition?.id || ''} onChange={handleSelectCompetition} fullWidth>
                 {competitions && competitions[0] && competitions.map(competition => (
                     <MenuItem key={competition.id} value={competition.id}>{competition.name}</MenuItem>
@@ -74,6 +84,8 @@ const MyCompetitionsContent = () => {
                     </Paper>
                 ))}
             </List>
+            <AddCompetitionModal open={openCompetitionModal} handleClose={handleCloseCompetitionModal} />
+
         </Container>
     );
 };

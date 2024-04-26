@@ -1,16 +1,24 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Grid, Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar, Box } from '@mui/material';
+import {Button, Grid, Container, Typography, List, ListItem, ListItemText, IconButton, Paper, Avatar, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModifyFighterModal from './ModifyFighterModal';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog';
+import AddFighterModal from './AddFighterModal';
+
 
 const MyFightersContent = () => {
   const [fighters, setFighters] = useState([]);
   const [selectedFighter, setSelectedFighter] = useState(null);
   const [isModifyOpen, setIsModifyOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [openFighterModal, setOpenFighterModal] = useState(false);
+
+
+  const handleOpenFighterModal = () => setOpenFighterModal(true);
+  const handleCloseFighterModal = () => setOpenFighterModal(false);
+
 
   const fetchData = () => {
     const token = localStorage.getItem('token');
@@ -70,6 +78,9 @@ const MyFightersContent = () => {
 
         <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>My Fighters</Typography>
       </Box>
+      <Button variant="contained" color="primary" onClick={handleOpenFighterModal}>
+        Add Fighter
+      </Button>
       <List sx={{ width: '100%' }}>
         {fighters.map(fighter => (
           <ListItem key={fighter.id} sx={{ px: 0 }} >
@@ -113,6 +124,8 @@ const MyFightersContent = () => {
           <DeleteConfirmationDialog fighter={selectedFighter} open={isDeleteOpen} onClose={handleClose} />
         </>
       )}
+      <AddFighterModal open={openFighterModal} handleClose={handleCloseFighterModal} />
+
     </Container>
   );
 };

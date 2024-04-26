@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Container, Typography, List, ListItem, IconButton, Paper, Avatar, Box } from '@mui/material';
+import {Button, Grid, Container, Typography, List, ListItem, IconButton, Paper, Avatar, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModifyCoachModal from './ModifyCoachModal';
 import DeleteUser from './DeleteUser';
 import LoadingWithImage from './LoadingWithImage'; // Adjust path as necessary
+import AddUserForm from './AddUserForm';
 
 
 const MyCoachesContent = () => {
@@ -13,8 +14,16 @@ const MyCoachesContent = () => {
   const [isModifyOpen, setIsModifyOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
 
 
+  const handleAddUserOpen = () => {
+    setIsAddUserOpen(true);
+  };
+
+  const handleAddUserClose = () => {
+    setIsAddUserOpen(false);
+  };
   const fetchData = () => {
     setTimeout(() => {
       setLoading(false);
@@ -70,6 +79,13 @@ const MyCoachesContent = () => {
 
   return (
     <div>
+      <Button sx={{ margin: 2 }} variant="contained" onClick={handleAddUserOpen}>
+        Add Coach
+      </Button>
+      <AddUserForm
+        open={isAddUserOpen}
+        handleClose={handleAddUserClose}
+      />
       {loading ? (
         <LoadingWithImage />
       ) : (

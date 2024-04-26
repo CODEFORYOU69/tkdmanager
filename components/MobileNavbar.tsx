@@ -42,7 +42,9 @@ const MobileNavbar: React.FC = () => {
       <BottomNavigation value={value} onChange={(event, newValue) => handleChange(newValue)} showLabels>
         <BottomNavigationAction label="Home" value="" icon={<HomeIcon />} />
         <BottomNavigationAction label="Profile" value="profile" icon={<AccountCircleIcon />} />
-        <BottomNavigationAction label="Dashboard" value="dashboard" icon={<DashboardIcon />} />
+          <BottomNavigationAction label="Fight Day" value="competitionday" icon={<SportsMartialArtsIcon />} />
+          <BottomNavigationAction label="Social" value="socialMedia" icon={<SocialIcon />} />
+
         <IconButton color="inherit" onClick={openMenu} sx={{ flexDirection: 'column', width: 'auto', minWidth: 0 }}>
           <EmojiEventsIcon sx={{ color: 'gray' }}/>
           <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'gray' }}>Manage</Typography>
@@ -55,8 +57,9 @@ const MobileNavbar: React.FC = () => {
           <MenuItem onClick={() => { handleChange('my-coaches'); closeMenu(); }}>Coach </MenuItem>
           <MenuItem onClick={() => { handleChange('my-fighters'); closeMenu(); }}>Fighter</MenuItem>
           <MenuItem onClick={() => { handleChange('mycompetitions'); closeMenu(); }}>Competition</MenuItem>
-          <MenuItem onClick={() => { handleChange('competitionday'); closeMenu(); }}>Fight Day</MenuItem>
-          <MenuItem onClick={() => { handleChange('socialMedia'); closeMenu(); }}>Social</MenuItem>
+          <MenuItem   sx={{ backgroundColor: 'red', color: 'white' }}
+ onClick={() => { handleChange(''); closeMenu(); }}>Logout</MenuItem>
+
         </Menu>
       </BottomNavigation>
     </Paper>
