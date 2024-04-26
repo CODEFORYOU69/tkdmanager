@@ -40,7 +40,7 @@ const MobileNavbar: React.FC = () => {
     return (
       <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 10 }} elevation={3}>
       <BottomNavigation value={value} onChange={(event, newValue) => handleChange(newValue)} showLabels>
-        <BottomNavigationAction label="Home" value="home" icon={<HomeIcon />} />
+        <BottomNavigationAction label="Home" value="" icon={<HomeIcon />} />
         <BottomNavigationAction label="Profile" value="profile" icon={<AccountCircleIcon />} />
         <BottomNavigationAction label="Dashboard" value="dashboard" icon={<DashboardIcon />} />
         <IconButton color="inherit" onClick={openMenu} sx={{ flexDirection: 'column', width: 'auto', minWidth: 0 }}>
@@ -70,7 +70,7 @@ const MobileNavbar: React.FC = () => {
           TKD MANAGER
         </Typography>
         <BottomNavigation sx={{backgroundColor: '#556cd6'}} value={value} onChange={(event, newValue) => handleChange(newValue)} showLabels>
-          <BottomNavigationAction color="primary" label="Home" value="" icon={<HomeIcon />} />
+          <BottomNavigationAction color="primary" label="" value="" icon={<HomeIcon />} />
           <BottomNavigationAction label="Profile" value="profile" icon={<AccountCircleIcon />} />
           <BottomNavigationAction label="Dashboard" value="dashboard" icon={<DashboardIcon />} />
           <BottomNavigationAction label="Coach" value="my-coaches" icon={<SportsIcon />} />
