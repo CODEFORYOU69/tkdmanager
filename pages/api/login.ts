@@ -9,12 +9,16 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     const { email, password } = req.body;
+    console.log("Authenticating account with email:", email);
+    console.log("pass", password);
     try {
       let account = await authenticateUser(email, password);
+      console.log("account", account);
       let role = "user";  // Définir le rôle par défaut comme utilisateur
 
       if (!account) {
         let account2 = await authenticateClub(email, password);
+        console.log("accout2", account2);
         role = "club";  // Changer le rôle si c'est un club qui est authentifié
         if (!account2) {
           return res.status(401).json({ message: 'Invalid credentials or account not accepted' });

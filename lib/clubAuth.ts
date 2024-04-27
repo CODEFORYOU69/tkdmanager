@@ -20,6 +20,7 @@ export async function createClub(name: string, email: string, password: string) 
 // Authentification d'un club avec email et mot de passe
 export async function authenticateClub(email: string, password: string): Promise<{ id: number, name: string, email: string } | null> {
   const club = await prisma.club.findUnique({ where: { email } });
+  console.log("club", club)
   if (!club || !(await bcrypt.compare(password, club.password))) {
     return null;  // Retourner null au lieu de false
   }
