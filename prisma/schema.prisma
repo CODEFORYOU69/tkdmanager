@@ -17,6 +17,10 @@ model Club {
   competitions  Competition[]
   createdAt     DateTime      @default(now())
   image         String?  // Image URL, nullable
+  isActive  Boolean @default(false)
+  verificationToken String?  @unique
+  tokenExpires      DateTime?
+
 
 }
 
@@ -29,8 +33,14 @@ model User {
   club          Club      @relation(fields: [clubId], references: [id])
   createdAt     DateTime  @default(now())
   image         String?  // Image URL, nullable
+  isActive      Boolean @default(true)
+  verificationToken String?  @unique
+  tokenExpires      DateTime?
+
 
 }
+
+
 
 model Fighter {
   id                Int       @id @default(autoincrement())

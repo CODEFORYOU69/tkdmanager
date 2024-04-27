@@ -21,8 +21,10 @@ export default async function handler(req, res) {
     if (!req.file) {
       throw new Error("No file uploaded or file upload failed.");
     }
+    let imageData = req.file.buffer; // Gardez l'image originale en mémoire
 
     // Créer un objet FormData pour l'envoi à remove.bg
+     try {
     const formData = new FormData();
     formData.append('size', 'auto');
     formData.append('image_file', req.file.buffer, req.file.originalname);
@@ -39,12 +41,14 @@ export default async function handler(req, res) {
       },
     });
 
-    if (removeBgResponse.status !== 200) {
-      throw new Error(`Error from remove.bg: ${removeBgResponse.status} ${removeBgResponse.statusText}`);
+    if (removeBgResponse.status === 200) {
+        imageData = removeBgResponse.data; // Utilisez l'image modifiée si remove.bg réussit
     }
-
+ } catch (removeBgError) {
+      console.error("Remove.bg API Error:", removeBgError); // Log the error but continue to upload the original image
+    }
     // Convertir l'image traitée en base64 pour l'envoyer à Cloudinary
-    const base64Image = Buffer.from(removeBgResponse.data).toString('base64');
+    const base64Image = Buffer.from(imageData).toString('base64');
     const cloudinaryResponse = await axios({
       method: 'post',
       url: `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
@@ -57,14 +61,14 @@ export default async function handler(req, res) {
       },
     });
 
-    if (cloudinaryResponse.status !== 200) {
+    if (cloudinaryResponse.status === 200) {
+      res.status(200).json({ imageUrl: cloudinaryResponse.data.secure_url });
+    }else {
       throw new Error(`Error from Cloudinary: ${cloudinaryResponse.status} ${cloudinaryResponse.statusText}`);
     }
-
-    // Répondre avec l'URL de l'image sur Cloudinary
-    res.status(200).json({ imageUrl: cloudinaryResponse.data.secure_url });
-  } catch (error) {
-    console.error("API Error:", error);
-    res.status(500).json({ message: error.message });
+} catch (error) {
+    console.error("Final API Error:", error);
+    res.status(500).json({ message: "Failed to process and upload image." });
   }
+    
 }

@@ -65,7 +65,8 @@ const Profile = () => {
         })
             .then(response => response.json())
             .then(data => {
-                notify?.('Fighter added successfully', { variant: 'success' });
+                notify?.('USER UPDATED successfully', { variant: 'success' });
+                router.push('/dashboard');
             })
             .catch(error => {
                 console.error('Error updating profile:', error);
@@ -123,7 +124,7 @@ const Profile = () => {
                                     // Changes the cursor to a pointer on hover
                                 }}
                                 onClick={() => open()}>
-                                Upload Profile Image
+                                Upload profil Image
                             </button>
                         );
                     }}

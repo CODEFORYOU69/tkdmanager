@@ -13,7 +13,8 @@ export async function createUser(email: string, name: string, password: string, 
       name,
       password: hashedPassword,
       clubId: parseInt(clubId),
-      image: imageUrl
+      image: imageUrl,
+      isActive: true
     }
   });
   return user;
@@ -23,10 +24,22 @@ export async function createUser(email: string, name: string, password: string, 
 
 
 // Fonction pour authentifier un utilisateur avec email et mot de passe
-export async function authenticateUser(email: string, password: string): Promise<{ id: number, email: string, name: string, clubId: number} | null> {
+export async function authenticateUser(
+  email: string,
+  password: string
+): Promise<{ id: number; email: string; name: string; clubId: number } | null> {
   const user = await prisma.user.findUnique({ where: { email } });
-  if (!user || !(await bcrypt.compare(password, user.password)) ) {
-    return null;  // Retourner null au lieu de false
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return null; // Retourner null au lieu de false
+  } else {
+    if (user.isActive === false) {
+      return null;
+    }
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      clubId: user.clubId,
+    };
   }
-  return { id: user.id, email: user.email, name: user.name, clubId: user.clubId };
 }

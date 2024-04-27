@@ -3,22 +3,46 @@ import React, { useState } from 'react';
 import { TextField, Button, Box, Container } from '@mui/material';
 import { CldUploadWidget } from 'next-cloudinary';
 import { useNotification } from './NotificationService';
-
-
+import Joi from 'joi';
 
 const SignUpForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [clubName, setClubName] = useState('');
+  const [name, setName] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [errors, setErrors] = useState({});
 
-  const { notify } = useNotification(); // Utiliser le contexte de notification ou un objet vide si null
+  const { notify } = useNotification();
 
+  const schema = Joi.object({
+    email: Joi.string().email({ tlds: { allow: false } }).required().label("Email"),
+    password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})')).required().label("Mot de passe"),
+    clubName: Joi.string().required().label("Nom du club"),
+    name: Joi.string().allow('').label("Nom"),
+  });
+
+  const validate = () => {
+    const { error } = schema.validate({ email, password, clubName, name }, { abortEarly: false });
+    if (!error) return null;
+
+    const newErrors = {};
+    for (let detail of error.details) {
+      newErrors[detail.path[0]] = detail.message;
+    }
+    return newErrors;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formErrors = validate();
+    if (formErrors) {
+      setErrors(formErrors);
+      return;
+    }
+
     const response = await fetch("/api/signup", {
-      // Assurez-vous que l'endpoint est correct
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -26,7 +50,8 @@ const SignUpForm = () => {
       body: JSON.stringify({
         email,
         password,
-        name: clubName,
+        clubName,
+        name,
         imageUrl,
       }),
     });
@@ -40,36 +65,33 @@ const SignUpForm = () => {
     }
   };
 
-
   return (
     <Container maxWidth="sm">
-      <>
-        <CldUploadWidget uploadPreset="tkdmanagerimage"
-          onSuccess={(results) => {
-            setImageUrl(results.info.url);
-          }}>
-          {({ open }) => {
-            return (
-              <button onClick={() => open()}>
-                Upload profil Image
-              </button>
-            );
-          }}
-        </CldUploadWidget>
-      </>
+      <CldUploadWidget uploadPreset="tkdmanagerimage"
+        onSuccess={(results) => {
+          setImageUrl(results.info.url);
+        }}>
+        {({ open }) => (
+          <button onClick={() => open()}>
+            Upload profil Image
+          </button>
+        )}
+      </CldUploadWidget>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
-
         <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-          <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required fullWidth sx={{ mb: 2 }} />
-          <TextField label="Mot de passe" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required fullWidth sx={{ mb: 2 }} />
-          <TextField label="Nom du club" value={clubName} onChange={(e) => setClubName(e.target.value)} required fullWidth sx={{ mb: 2 }} />
-
+          <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required fullWidth sx={{ mb: 2 }} error={!!errors.email} helperText={errors.email || ''}
+          />
+          <TextField label="Mot de passe" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required fullWidth sx={{ mb: 2 }} error={!!errors.password} helperText={errors.password || ''}
+          />
+          <TextField label="Nom du club" value={clubName} onChange={(e) => setClubName(e.target.value)} required fullWidth sx={{ mb: 2 }} error={!!errors.clubName} helperText={errors.clubName || ''}
+          />
+          <TextField label="Nom" value={name} onChange={(e) => setName(e.target.value)} fullWidth sx={{ mb: 2 }} error={!!errors.name} helperText={errors.name || ''}
+          />
           <Button type="submit" variant="contained" color="primary">
             Inscription
           </Button>
         </form>
       </Box>
-
     </Container>
   );
 };

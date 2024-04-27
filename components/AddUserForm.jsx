@@ -3,6 +3,7 @@ import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } 
 import jwt from 'jsonwebtoken';
 import { useNotification } from './NotificationService';
 import { CldUploadWidget } from 'next-cloudinary';
+import Joi from 'joi';
 
 
 
@@ -12,9 +13,27 @@ const AddUserForm = ({ open, handleClose }) => {
     const [password, setPassword] = useState('');
     const [clubId, setClubId] = useState('');  // State to store clubId
     const [imageUrl, setImageUrl] = useState('');
+    const [errors, setErrors] = useState({});
+
 
     const { notify } = useNotification();
 
+    const schema = Joi.object({
+        email: Joi.string().email({ tlds: { allow: false } }).required().label("Email Address"),
+        password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})')).required().label("Password"),
+        name: Joi.string().required().label("Name"),
+    });
+
+    const validate = () => {
+        const { error } = schema.validate({ email, password, clubName, name }, { abortEarly: false });
+        if (!error) return null;
+
+        const newErrors = {};
+        for (let detail of error.details) {
+            newErrors[detail.path[0]] = detail.message;
+        }
+        return newErrors;
+    };
     // Function to get clubId from the stored JWT
     const getClubIdFromToken = () => {
         const token = localStorage.getItem('token');  // Retrieve the JWT token from localStorage
@@ -30,6 +49,11 @@ const AddUserForm = ({ open, handleClose }) => {
     }, []);
 
     const submitForm = async () => {
+        const formErrors = validate();
+        if (formErrors) {
+            setErrors(formErrors);
+            return;
+        }
         try {
             const response = await fetch('/api/users/addUser', {
                 method: 'POST',
@@ -89,9 +113,9 @@ const AddUserForm = ({ open, handleClose }) => {
             </CldUploadWidget>
 
             <DialogContent>
-                <TextField autoFocus margin="dense" label="Email Address" type="email" fullWidth variant="outlined" value={email} onChange={e => setEmail(e.target.value)} />
-                <TextField margin="dense" label="Name" type="text" fullWidth variant="outlined" value={name} onChange={e => setName(e.target.value)} />
-                <TextField margin="dense" label="Password" type="password" fullWidth variant="outlined" value={password} onChange={e => setPassword(e.target.value)} />
+                <TextField margin="dense" label="Name" type="text" fullWidth variant="outlined" value={name} onChange={e => setName(e.target.value)} error={!!errors.name} helperText={errors.name || ''} />
+                <TextField autoFocus margin="dense" label="Email Address" type="email" fullWidth variant="outlined" value={email} onChange={e => setEmail(e.target.value)} error={!!errors.email} helperText={errors.email || '' }/>
+                <TextField margin="dense" label="Password" type="password" fullWidth variant="outlined" value={password} onChange={e => setPassword(e.target.value)} error={!!errors.password} helperText={errors.password || ''}  />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>

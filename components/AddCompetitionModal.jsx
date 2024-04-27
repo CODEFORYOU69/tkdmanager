@@ -4,6 +4,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } 
 import { useNotification } from './NotificationService';
 import { CldUploadWidget } from 'next-cloudinary';
 
+
 const AddCompetitionModal = ({ open, handleClose }) => {
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
