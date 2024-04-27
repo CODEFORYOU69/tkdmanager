@@ -50,7 +50,19 @@ const SignUpForm = () => {
           }}>
           {({ open }) => {
             return (
-              <button onClick={() => open()}>
+              <button
+                style={{
+                  border: '2px solid black', // Sets a black border around the button
+                  padding: '10px 20px', // Adds some padding inside the button for better spacing
+                  color: 'white', // Sets the text color to white
+                  cursor: 'pointer',
+                  margin: '25px', // Adds some margin around the button 
+                  borderRadius: '5px', // Rounds the corners of the button
+                  backgroundColor: 'black', // Sets the background color to black
+
+                  // Changes the cursor to a pointer on hover
+                }}
+                onClick={() => open()}>
                 Upload profil Image
               </button>
             );

@@ -364,6 +364,7 @@ export default function CompetitionDayContent() {
                         onClose={closeModal}
                         match={selectedMatch}
                     />
+                    
                 )}
             </Box>
             </Box>

@@ -53,9 +53,7 @@ const AddFightModal = ({ open, onClose, competitionId }) => {
         });
     };
 
-    useEffect(() => {
-        fetchData();
-      }, []);
+  
 
     const handleSave = async () => {
         if (!selectedFighterId) {

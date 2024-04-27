@@ -115,7 +115,6 @@ const AddFighterModal = ({ open, handleClose }) => {
                     uppy={uppy}
                     proudlyDisplayPoweredByUppy={false}
                     plugins={['Webcam', 'ImageEditor']}
-                    height={400}
 
                 />
                 <TextField
