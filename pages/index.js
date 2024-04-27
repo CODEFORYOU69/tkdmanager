@@ -4,9 +4,7 @@ import Image from 'next/image';
 import '@fontsource/roboto-condensed/700.css'; // Poids 700 pour gras
 import { useRouter } from 'next/router';
 
-const theme = createTheme({
 
-});
 
 const HomePage = () => {
   const router = useRouter();
