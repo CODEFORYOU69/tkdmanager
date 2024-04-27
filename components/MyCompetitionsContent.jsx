@@ -41,7 +41,7 @@ const MyCompetitionsContent = () => {
         } else {
             setFighters([]);
         }
-    }, [selectedCompetition]);
+    }, [fighters, selectedCompetition]);
 
     const handleOpenCompetitionModal = () => setOpenCompetitionModal(true);
     const handleCloseCompetitionModal = () => setOpenCompetitionModal(false);
@@ -61,7 +61,7 @@ const MyCompetitionsContent = () => {
             setFighters([]);
         }
         loadFighters();
-    }, [loadFighters, selectedCompetition]);
+    }, [fighters, loadFighters, selectedCompetition]);
 
     const handleSelectCompetition = (event) => {
         const competition = competitions.find((c) => c.id === event.target.value);

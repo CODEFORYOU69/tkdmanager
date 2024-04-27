@@ -113,7 +113,7 @@ export default function CompetitionDayContent() {
                 })
                 .catch(err => console.error('Error fetching matches:', err));
         }
-    }, [selectedCompetition]);
+    }, [currentFightNumber, selectedCompetition]);
 
     const customSortMatches = (matches) => {
         return matches.sort((a, b) => {
@@ -183,18 +183,37 @@ export default function CompetitionDayContent() {
         setCurrentFightNumber(prev => ({ ...prev, [area]: value }));
     };
 
-    const calculateRemainingFights = (area) => {
-        if (!currentFightNumber[area] || !ongoingMatches[area]) return 0; // Renvoie 0 si aucun combat actuel n'est défini ou si aucun combat n'est en cours pour l'aire
+    useEffect(() => {
+        const calculateRemainingFights = (area) => {
+            if (!currentFightNumber[area] || !ongoingMatches[area]) return 0;
 
-        // Trouver le prochain numéro de combat après le combat actuel
-        const nextFightIndex = ongoingMatches[area].findIndex(match => match.fightNumber > currentFightNumber[area]);
+            const nextFightIndex = ongoingMatches[area].findIndex(match => match.fightNumber > currentFightNumber[area]);
 
-        if (nextFightIndex === -1) return 0; // Renvoie 0 si aucun combat futur n'est trouvé
+            if (nextFightIndex === -1) return 0;
 
-        // Calcul du nombre de combats entre le combat actuel et le prochain combat enregistré
-        const nextFightNumber = ongoingMatches[area][nextFightIndex].fightNumber;
-        return nextFightNumber - currentFightNumber[area];
-    };
+            const nextFightNumber = ongoingMatches[area][nextFightIndex].fightNumber;
+            return nextFightNumber - currentFightNumber[area];
+        };
+
+        const newRemainingFights = {};
+        Object.keys(ongoingMatches).forEach(area => {
+            newRemainingFights[area] = calculateRemainingFights(area);
+        });
+        setRemainingFightsByArea(newRemainingFights);
+
+        // Détecter les doublons
+        const counts = {};
+        Object.values(newRemainingFights).forEach(fight => {
+            counts[fight] = (counts[fight] || 0) + 1;
+        });
+        const newDuplicates = new Set();
+        Object.entries(counts).forEach(([fight, count]) => {
+            if (count > 1) newDuplicates.add(parseInt(fight));
+        });
+        setDuplicateFights(newDuplicates);
+
+    }, [ongoingMatches, currentFightNumber]);
+
 
     const handleCompetitionChange = (event) => {
         const competition = competitions.find(c => c.id === event.target.value);
