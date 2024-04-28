@@ -30,6 +30,7 @@ const MyCompetitionsContent = () => {
                 .then(res => res.json())
                 .then(setFighters)
                 .catch(console.error);
+            console.log("fighters", fighters);
         } else {
             setFighters([]);
         }
@@ -47,9 +48,9 @@ const MyCompetitionsContent = () => {
         <Container maxWidth="md">
             <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
 
-                <Typography variant="h4" color="primary"  sx={{ textAlign: 'center' }}>Organise my fight</Typography>
+                <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>Organise my fight</Typography>
             </Box>
-            <Button sx={{marginBottom:2}} variant="contained" color="primary" onClick={handleOpenCompetitionModal}>
+            <Button sx={{ marginBottom: 2 }} variant="contained" color="primary" onClick={handleOpenCompetitionModal}>
                 Add Competition
             </Button>
             <Select value={selectedCompetition?.id || ''} onChange={handleSelectCompetition} fullWidth>
@@ -77,7 +78,7 @@ const MyCompetitionsContent = () => {
 
 
                         {fighter.matches.map(match => (
-                            <ListItem key={match.id} sx={{ backgroundColor: match.color, mt: 1, borderRadius: 2, color: 'white' }}>
+                            <ListItem key={match.matchId} sx={{ backgroundColor: match.color, mt: 1, borderRadius: 2, color: 'white' }}>
                                 <ListItemText primary={`Match #${match.fightNumber} - ${match.color} - Result: ${match.result || 'Pending'}`} />
                             </ListItem>
                         ))}

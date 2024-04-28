@@ -7,6 +7,10 @@ import MobileNavbar from '../components/MobileNavbar';
 import ProfileCard from '../components/ProfileCard';
 import { AuthProvider } from '../components/AuthProvider'; // Assurez-vous d'ajuster le chemin
 import { NotificationProvider } from "../components/NotificationService";
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
+
 
 const theme = createTheme({
    palette: {
@@ -33,6 +37,7 @@ const theme = createTheme({
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
+  <QueryClientProvider client={queryClient}>
     <ThemeProvider theme={theme}>
       <NotificationProvider>
         <AuthProvider> 
@@ -45,6 +50,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         </AuthProvider>
       </NotificationProvider>
     </ThemeProvider>
+  </QueryClientProvider>
+
   );
 }
 

@@ -27,7 +27,7 @@ export default async function handler(
             role  // Inclure le rôle déterminé dynamiquement
           },
           process.env.JWT_SECRET as string,
-          { expiresIn: '1h' }
+          { expiresIn: '7d' }
         );
         // Retourner le token et les informations pertinentes
         res.status(200).json({
