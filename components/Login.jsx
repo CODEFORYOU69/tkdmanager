@@ -4,6 +4,8 @@ import { useNotification } from './NotificationService'; // Assurez-vous que le 
 
 import { TextField, Button, Container, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
+
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -25,9 +27,13 @@ const Login = () => {
         body: JSON.stringify(credentials),
       });
       const data = await response.json();
+      console.log("data", data);
       if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", JSON.stringify(data.account.role));
+        Cookies.set('token', data.token, { expires: 7 }); // Le jeton expire après 7 jours
+
+
         notify("Connexion réussie!", { variant: "success" });
 
         // Save the JWT in localStorage
