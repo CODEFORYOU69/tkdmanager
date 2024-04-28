@@ -183,37 +183,18 @@ export default function CompetitionDayContent() {
         setCurrentFightNumber(prev => ({ ...prev, [area]: value }));
     };
 
-    useEffect(() => {
-        const calculateRemainingFights = (area) => {
-            if (!currentFightNumber[area] || !ongoingMatches[area]) return 0;
+    const calculateRemainingFights = (area) => {
+        if (!currentFightNumber[area] || !ongoingMatches[area]) return 0; // Renvoie 0 si aucun combat actuel n'est défini ou si aucun combat n'est en cours pour l'aire
 
-            const nextFightIndex = ongoingMatches[area].findIndex(match => match.fightNumber > currentFightNumber[area]);
+        // Trouver le prochain numéro de combat après le combat actuel
+        const nextFightIndex = ongoingMatches[area].findIndex(match => match.fightNumber > currentFightNumber[area]);
 
-            if (nextFightIndex === -1) return 0;
+        if (nextFightIndex === -1) return 0; // Renvoie 0 si aucun combat futur n'est trouvé
 
-            const nextFightNumber = ongoingMatches[area][nextFightIndex].fightNumber;
-            return nextFightNumber - currentFightNumber[area];
-        };
-
-        const newRemainingFights = {};
-        Object.keys(ongoingMatches).forEach(area => {
-            newRemainingFights[area] = calculateRemainingFights(area);
-        });
-        setRemainingFightsByArea(newRemainingFights);
-
-        // Détecter les doublons
-        const counts = {};
-        Object.values(newRemainingFights).forEach(fight => {
-            counts[fight] = (counts[fight] || 0) + 1;
-        });
-        const newDuplicates = new Set();
-        Object.entries(counts).forEach(([fight, count]) => {
-            if (count > 1) newDuplicates.add(parseInt(fight));
-        });
-        setDuplicateFights(newDuplicates);
-
-    }, [ongoingMatches, currentFightNumber]);
-
+        // Calcul du nombre de combats entre le combat actuel et le prochain combat enregistré
+        const nextFightNumber = ongoingMatches[area][nextFightIndex].fightNumber;
+        return nextFightNumber - currentFightNumber[area];
+    };
 
     const handleCompetitionChange = (event) => {
         const competition = competitions.find(c => c.id === event.target.value);
@@ -284,7 +265,7 @@ export default function CompetitionDayContent() {
                 >
                     {competitions.map(competition => (
                         <MenuItem key={competition.id} value={competition.id} sx={{ maxHeight: '60vh', overflowY: 'auto' }}
->
+                        >
                             {competition.name}
                         </MenuItem>
                     ))}
@@ -296,96 +277,95 @@ export default function CompetitionDayContent() {
                 </Tabs>
                 <Box sx={{ maxHeight: '60vh', overflowY: 'auto', pb: 7 }}>
 
-                {tabValue === 0 && filteredMatches.map(match => (
-                    <Paper key={match.id} sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexDirection: 'column',
-                        backgroundColor: match.color,
-                        padding: 2,
-                        marginBottom: 1,
-                        color: 'white',
-                        borderRadius: 2 // Ajoute un léger arrondi aux bords du Paper
-                    }}>
-                        <Typography variant="h6" sx={{ fontSize: '1.5rem' }}>
-                            Fight #{match.fightNumber}
-                        </Typography>
-                        <Avatar src={match.fighter.image} sx={{ width: 100, height: 100, marginRight: 1, backgroundColor: 'white' }} />
-                        <Box sx={{ flexGrow: 1, textAlign: 'left' }}> {/* Box contenant le texte pour le contrôle du layout */}
+                    {tabValue === 0 && filteredMatches.map(match => (
+                        <Paper key={match.id} sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexDirection: 'column',
+                            backgroundColor: match.color,
+                            padding: 2,
+                            marginBottom: 1,
+                            color: 'white',
+                            borderRadius: 2 // Ajoute un léger arrondi aux bords du Paper
+                        }}>
                             <Typography variant="h6" sx={{ fontSize: '1.5rem' }}>
-                                {match.fighter.firstName} {match.fighter.lastName}
+                                Fight #{match.fightNumber}
                             </Typography>
-                            <Typography variant="body1" gutterBottom>
-                                Rounds Recorded: {roundSavedData[match.id] ? roundSavedData[match.id].length : 0}
-                            </Typography>
-                        </Box>
-                        <Button variant="outlined" sx={{ width: '100%', color: 'white', borderColor: 'white' }} onClick={() => openModal(match)}>
-                            Manage Rounds
-                        </Button>
-                    </Paper>
-
-                ))}
-
-                {tabValue === 1 && completedMatches.map(match => (
-                    <Paper key={match.id} sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        backgroundColor: match.color,
-                        padding: 2,
-                        marginBottom: 1,
-                        color: 'white',
-                        borderRadius: 2
-                    }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Avatar src={match.fighter.image} sx={{ width: 100, height: 100, marginRight: 2, backgroundColor: 'white' }} />
-                            <Box sx={{ flexGrow: 1 }}>
-                                <Typography variant="h6" gutterBottom>
-                                    Fight #{match.fightNumber} - {match.fighter.firstName} {match.fighter.lastName}
+                            <Avatar src={match.fighter.image} sx={{ width: 100, height: 100, marginRight: 1, backgroundColor: 'white' }} />
+                            <Box sx={{ flexGrow: 1, textAlign: 'left' }}> {/* Box contenant le texte pour le contrôle du layout */}
+                                <Typography variant="h6" sx={{ fontSize: '1.5rem' }}>
+                                    {match.fighter.firstName} {match.fighter.lastName}
                                 </Typography>
-                                <Typography variant="subtitle1" gutterBottom>
-                                    Result: {match.result || 'Pending'}
+                                <Typography variant="body1" gutterBottom>
+                                    Rounds Recorded: {roundSavedData[match.id] ? roundSavedData[match.id].length : 0}
                                 </Typography>
                             </Box>
-                        </Box>
-                        {Array.isArray(roundData[match.id]) ? roundData[match.id].map(round => (
-                            <Box key={round.id} sx={{ paddingLeft: 2, paddingTop: 1 }}>
-                                <Typography variant="body2">
-                                    Round Score: Blue {round.scoreBlue} - Red {round.scoreRed}
-                                </Typography>
-                                <Typography variant="body2">
-                                    Victory Type: {round.victoryType || 'N/A'}
-                                </Typography>
-                                <Typography variant="body2">
-                                    Result: {round.isWinner ? 'Winner' : 'Loser'}
-                                </Typography>
-                            </Box>
-                        )) : (
-                            <Box sx={{ paddingLeft: 2, paddingTop: 1 }}>
-                                <Typography variant="body2">
-                                    Round Score: Blue {roundData[match.id]?.scoreBlue} - Red {roundData[match.id]?.scoreRed}
-                                </Typography>
-                                <Typography variant="body2">
-                                    Victory Type: {roundData[match.id]?.victoryType || 'N/A'}
-                                </Typography>
-                                <Typography variant="body2">
-                                    Result: {roundData[match.id]?.isWinner ? 'Winner' : 'Loser'}
-                                </Typography>
-                            </Box>
-                            
-                        )}
-                    </Paper>
+                            <Button variant="outlined" sx={{ width: '100%', color: 'white', borderColor: 'white' }} onClick={() => openModal(match)}>
+                                Manage Rounds
+                            </Button>
+                        </Paper>
 
-                ))}
+                    ))}
 
-                {selectedMatch && (
-                    <AddRoundModal
-                        open={isModalOpen}
-                        onClose={closeModal}
-                        match={selectedMatch}
-                    />
-                    
-                )}
-            </Box>
+                    {tabValue === 1 && completedMatches.map(match => (
+                        <Paper key={match.id} sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            backgroundColor: match.color,
+                            padding: 2,
+                            marginBottom: 1,
+                            color: 'white',
+                            borderRadius: 2
+                        }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Avatar src={match.fighter.image} sx={{ width: 100, height: 100, marginRight: 2, backgroundColor: 'white' }} />
+                                <Box sx={{ flexGrow: 1 }}>
+                                    <Typography variant="h6" gutterBottom>
+                                        Fight #{match.fightNumber} - {match.fighter.firstName} {match.fighter.lastName}
+                                    </Typography>
+                                    <Typography variant="subtitle1" gutterBottom>
+                                        Result: {match.result || 'Pending'}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            {Array.isArray(roundData[match.id]) ? roundData[match.id].map(round => (
+                                <Box key={round.id} sx={{ paddingLeft: 2, paddingTop: 1 }}>
+                                    <Typography variant="body2">
+                                        Round Score: Blue {round.scoreBlue} - Red {round.scoreRed}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Victory Type: {round.victoryType || 'N/A'}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Result: {round.isWinner ? 'Winner' : 'Loser'}
+                                    </Typography>
+                                </Box>
+                            )) : (
+                                <Box sx={{ paddingLeft: 2, paddingTop: 1 }}>
+                                    <Typography variant="body2">
+                                        Round Score: Blue {roundData[match.id]?.scoreBlue} - Red {roundData[match.id]?.scoreRed}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Victory Type: {roundData[match.id]?.victoryType || 'N/A'}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Result: {roundData[match.id]?.isWinner ? 'Winner' : 'Loser'}
+                                    </Typography>
+                                </Box>
+
+                            )}
+                        </Paper>
+
+                    ))}
+
+                    {selectedMatch && (
+                        <AddRoundModal
+                            open={isModalOpen}
+                            onClose={closeModal}
+                            match={selectedMatch}
+                        />
+                    )}
+                </Box>
             </Box>
 
         </Container>

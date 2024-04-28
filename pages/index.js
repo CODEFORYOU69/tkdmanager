@@ -1,10 +1,33 @@
 import React from 'react';
 import { Container, Typography, Box, Button } from '@mui/material';
 import Image from 'next/image';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '@fontsource/roboto-condensed/700.css'; // Poids 700 pour gras
 import { useRouter } from 'next/router';
 
-
+const theme = createTheme({
+  typography: {
+    h2: {
+      fontFamily: 'Roboto Condensed',
+      fontWeight: 700,
+      color: '#2E3B55', // Choisissez une couleur selon votre branding
+      textShadow: '1px 1px 4px rgba(0,0,0,0.5)', // Ombre subtile pour du contraste
+    },
+    button: {
+      fontWeight: 500,
+      textTransform: 'none' // Enlever la transformation en majuscules par défaut
+    }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          margin: '10px', // Espace entre les boutons
+        }
+      }
+    }
+  }
+});
 
 const HomePage = () => {
   const router = useRouter();
@@ -17,7 +40,7 @@ const HomePage = () => {
   };
 
   return (
-    
+    <ThemeProvider theme={theme}>
       <Container maxWidth="md" sx={{
   height: '50vh',
   display: 'flex',
@@ -62,6 +85,7 @@ const HomePage = () => {
 </Container>
 
 
+    </ThemeProvider>
   );
 };
 
