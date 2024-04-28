@@ -24,7 +24,6 @@ export default function CompetitionDayContent({ competitions }) {
     const [duplicateFights, setDuplicateFights] = useState(new Set());
     const [roundSavedData, setRoundSavedData] = useState([]);
 
-    console.log('Competitions state:', comp); // Ajoutez cette ligne
 
 
 
