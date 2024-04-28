@@ -17,11 +17,12 @@ export default async function handler(req, res) {
                   
                 },
             });
-
+         console.log("rounds", rounds);
             if (rounds.length > 0) {
                 res.status(200).json(rounds);
             } else {
-                return
+                // Envoyez une réponse HTTP même quand il n'y a pas de rounds
+                res.status(204).send(); // 204 No Content
             }
         } catch (error) {
             console.error('Error fetching rounds:', error);
