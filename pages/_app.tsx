@@ -7,13 +7,15 @@ import MobileNavbar from '../components/MobileNavbar';
 import ProfileCard from '../components/ProfileCard';
 import { AuthProvider } from '../components/AuthProvider'; // Assurez-vous d'ajuster le chemin
 import { NotificationProvider } from "../components/NotificationService";
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
+
 
 const theme = createTheme({
    palette: {
     primary: {
       main: '#556cd6',
-      dark: '#000000'
-
     },
     secondary: {
       main: '#19857b',
@@ -31,11 +33,11 @@ const theme = createTheme({
         fontWeight: 600,
       },
     },
-    
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
+  <QueryClientProvider client={queryClient}>
     <ThemeProvider theme={theme}>
       <NotificationProvider>
         <AuthProvider> 
@@ -48,6 +50,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         </AuthProvider>
       </NotificationProvider>
     </ThemeProvider>
+  </QueryClientProvider>
+
   );
 }
 

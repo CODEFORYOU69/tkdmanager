@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Grid, IconButton, Button, Container, Typography, Select, MenuItem, List, ListItem, ListItemText, Paper, Avatar, Box } from '@mui/material';
 import AddFightModal from './AddFightModal';
 import AddCompetitionModal from './AddCompetitionModal';
@@ -14,7 +14,6 @@ const MyCompetitionsContent = () => {
     const [fighters, setFighters] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [openCompetitionModal, setOpenCompetitionModal] = useState(false);
-    const [match, setMatch] = useState(null);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [isModifyOpen, setIsModifyOpen] = useState(false);
     const [selectedMatch, setSelectedMatch] = useState(null);
@@ -37,36 +36,37 @@ const MyCompetitionsContent = () => {
                 .then((res) => res.json())
                 .then(setFighters)
                 .catch(console.error);
-                console.log("fighters", fighters)
         } else {
             setFighters([]);
         }
-    }, [fighters, selectedCompetition]);
+    }, [selectedCompetition]);
+    useEffect(() => {
+        loadFighters();
+    }, [loadFighters]);
 
     const handleOpenCompetitionModal = () => setOpenCompetitionModal(true);
-    const handleCloseCompetitionModal = () => setOpenCompetitionModal(false);
 
-    useEffect(() => {
-        if (selectedCompetition) {
-            fetch(
-                `/api/match/fightersByCompetition?competitionId=${selectedCompetition.id}`
-            )
-                .then((res) => res.json())
-                .then(setFighters)
 
-                .catch(console.error);
-            console.log("fighters", fighters)
-
-        } else {
-            setFighters([]);
-        }
-        loadFighters();
-    }, [fighters, loadFighters, selectedCompetition]);
 
     const handleSelectCompetition = (event) => {
         const competition = competitions.find((c) => c.id === event.target.value);
         setSelectedCompetition(competition);
     };
+    const handleModalToggle = (isOpen, modalType) => {
+        if (modalType === 'delete') {
+            setIsDeleteOpen(isOpen);
+            if (!isOpen) loadFighters();  // Refresh data after closing delete modal
+
+        } else if (modalType === 'modify') {
+            setIsModifyOpen(isOpen);
+            if (!isOpen) loadFighters();  // Refresh data after closing delete modal
+
+        } else {
+            setModalOpen(isOpen);
+        }
+    };
+
+
     const handleOpenDelete = (match) => {
         setMatchId(match.matchId);
         setSelectedMatch(match);
@@ -84,6 +84,7 @@ const MyCompetitionsContent = () => {
     const handleCloseModal = (modified = false) => {
         setIsModifyOpen(false);
         setIsDeleteOpen(false);
+
         if (modified) {
             loadFighters(); // Recharge les combattants après une modification ou suppression
         }
@@ -213,20 +214,17 @@ const MyCompetitionsContent = () => {
                         matchId={matchId}
                         fighters={fighters}
                         open={isModifyOpen}
-                        onClose={() => handleCloseModal(true)}
-                    />
+                        onClose={() => handleModalToggle(false, 'modify')} />
                     <DeleteMatchDialog
                         match={selectedMatch}
                         matchId={matchId}
                         open={isDeleteOpen}
-                        onClose={handleCloseModal}
-                    />
+                        onClose={() => handleModalToggle(false, 'delete')} />
                 </>
             )}
             <AddCompetitionModal
                 open={openCompetitionModal}
-                handleClose={handleCloseCompetitionModal}
-            />
+                handleClose={() => handleModalToggle(false, 'competition')} />
         </Container>
     );
 };
