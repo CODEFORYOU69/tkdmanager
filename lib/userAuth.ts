@@ -25,7 +25,6 @@ export async function createUser(email: string, name: string, password: string, 
 // Fonction pour authentifier un utilisateur avec email et mot de passe
 export async function authenticateUser(email: string, password: string): Promise<{ id: number, email: string, name: string, clubId: number} | null> {
   const user = await prisma.user.findUnique({ where: { email } });
-  console.log("user", user)
   if (!user || !(await bcrypt.compare(password, user.password)) ) {
     return null;  // Retourner null au lieu de false
   }

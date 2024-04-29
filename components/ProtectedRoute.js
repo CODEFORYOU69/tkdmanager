@@ -10,11 +10,7 @@ const ProtectedRoute = ({ children }) => {
     useEffect(() => {
         
         if (loading && !user) {
-                        console.log("Redirection car aucun utilisateur n'est connecté");
-
-            // supprimer les données dans le context
-
-            // Redirige vers la page de connexion
+                        
             router.push('/login'); // Redirige vers login si pas connecté et chargement terminé
         }
     }, [user, loading, router]);

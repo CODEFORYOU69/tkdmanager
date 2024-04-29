@@ -17,7 +17,6 @@ export default async function handler(req, res) {
                   
                 },
             });
-         console.log("rounds", rounds);
             if (rounds.length > 0) {
                 res.status(200).json(rounds);
             } else {

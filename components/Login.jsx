@@ -27,7 +27,6 @@ const Login = () => {
         body: JSON.stringify(credentials),
       });
       const data = await response.json();
-      console.log("data", data);
       if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", JSON.stringify(data.account.role));

@@ -23,10 +23,7 @@ export default async function handler(req, res) {
             break;
 
         case 'PUT':
-            // Code pour mettre à jour un combattant
-            console.log(req.body)
-            console.log("matchId", matchId)
-            console.log(typeof matchId, matchId);  // This should output 'number' and the value
+            
 
             try {
                 const { fightNumber,
@@ -35,8 +32,7 @@ export default async function handler(req, res) {
                 competitionId
                  } = req.body;
                 const fightNumberId = parseInt(fightNumber);
-                  console.log(req.body)
-            console.log("matchId", matchId)
+                
 
                 const updatedMatch = await prisma.match.update({
                     where: { id: matchId },

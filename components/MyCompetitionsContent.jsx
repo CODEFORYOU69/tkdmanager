@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useOptimistic } from 'react';
 import { Grid, IconButton, Button, Container, Typography, Select, MenuItem, List, ListItem, ListItemText, Paper, Avatar, Box } from '@mui/material';
 import AddFightModal from './AddFightModal';
 import AddCompetitionModal from './AddCompetitionModal';
@@ -73,9 +73,7 @@ const MyCompetitionsContent = () => {
         setIsDeleteOpen(true);
     };
 
-    const handleOpenModify = (match) => {
-        console.log("matchcontent", match);
-        setMatchId(match.matchId);
+    const handleOpenModify = (match) => {        setMatchId(match.matchId);
         setSelectedMatch(match);
         setIsModifyOpen(true);
     };

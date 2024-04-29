@@ -19,7 +19,6 @@ const ModifyMatchModal = ({ open, onClose, match, matchId, competitionId, fighte
     const [fightNumber, setFightNumber] = useState(match.fightNumber);
     const [color, setColor] = useState(match.color);
     const [fighterId, setFighterId] = useState(match.fighterId);
-console.log("match", match);
     const { notify } = useNotification();
 
     useEffect(() => {
@@ -30,8 +29,6 @@ console.log("match", match);
 
     const handleSave = async () => {
         const token = localStorage.getItem('token');
-        console.log("match", matchId)
-        console.log("competitionId", competitionId)
         const response = await fetch(`/api/match/${matchId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },

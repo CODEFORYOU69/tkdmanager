@@ -5,7 +5,6 @@ import MyCompetitionDayContent  from '../components/MyCompetitionsDayContent'; /
 
 export async function getServerSideProps(context) {
   const token = context.req.cookies.token;
-    console.log("token", token)
     const baseUrl = process.env.FRONTEND_URL;
     
     const competitionsRes = await fetch(`${baseUrl}/api/competitions`, {
@@ -15,7 +14,6 @@ export async function getServerSideProps(context) {
     });
 
     const competitions = await competitionsRes.json();
-    console.log("competitions", competitions)
 
     return {
         props: { competitions }, // will be passed to the page component as props
