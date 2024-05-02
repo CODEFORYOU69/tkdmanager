@@ -5,8 +5,6 @@ const prisma = new PrismaClient();
 async function verify(req, res) {
   const { token, type } = req.query; // Obtenir le token et le type de la requête
 
-  console.log("Verifying token:", token);
-  console.log("Type:", type)
 
   if (!type || !token) {
     return res.status(400).json({ message: "Missing token or type parameters." });
@@ -14,7 +12,6 @@ async function verify(req, res) {
 
   try {
     let entity = null;
-    console.log("enity:", entity);
 
     // Sélectionner la méthode de recherche en fonction du type
     if (type === 'user') {

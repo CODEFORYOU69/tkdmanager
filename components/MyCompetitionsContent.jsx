@@ -36,7 +36,6 @@ const MyCompetitionsContent = () => {
                 .then((res) => res.json())
                 .then(setFighters)
                 .catch(console.error);
-            console.log("fighters", fighters);
         } else {
             setFighters([]);
         }
