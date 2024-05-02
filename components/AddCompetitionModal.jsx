@@ -1,4 +1,5 @@
 // components/AddCompetitionModal.tsx
+"use client"
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { useNotification } from './NotificationService';
@@ -31,14 +32,14 @@ const AddCompetitionModal = ({ open, handleClose }) => {
 
     if (response.ok) {
       notify('Competition added successfully', { variant: 'success' });
-      handleClose(); // Fermer la modale après l'ajout
+      onClose(true); // Fermer la modale après l'ajout
     } else {
       notify('Error while adding competition', { variant: 'error' });
     };
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={() => handleClose(false)}>
       <DialogTitle>Add New Competition</DialogTitle>
       <CldUploadWidget uploadPreset="tkdmanagerimage"
         onSuccess={(results) => {
@@ -88,7 +89,7 @@ const AddCompetitionModal = ({ open, handleClose }) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={() => onClose(handleClose)}>Cancel</Button>
         <Button onClick={handleSave}>Save</Button>
       </DialogActions>
     </Dialog>

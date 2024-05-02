@@ -61,7 +61,7 @@ const SignUpForm = () => {
     if (response.ok) {
       notify?.(data.message, { variant: "success" });
     } else {
-      notify?.(data.message, { variant: "error" });
+      notify?.('Signup failed', { variant: "error" });
     }
   };
 

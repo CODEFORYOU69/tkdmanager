@@ -1,0 +1,25 @@
+.fighterImage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    z-index: 1000;
+    transform: translate(-50%, -50%);
+    clip-path: circle(50%); /* Crée un cercle parfait */
+    border-radius: 50%; /* Arrondit les coins */
+    border: 8px solid; /* Épaisseur de la bordure */
+    border-color: #1414f5/* Couleur de la bordure */}
+
+.fighterImage2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 170px;
+    height: 170px;
+    z-index: 1000;
+    transform: translate(-50%, -50%);
+    clip-path: circle(50%); /* Crée un cercle parfait */
+    border-radius: 50%; /* Arrondit les coins */
+    border: 8px solid; /* Épaisseur de la bordure */
+    border-color: #cb0606 /* Couleur de la bordure */}

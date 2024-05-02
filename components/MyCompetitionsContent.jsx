@@ -18,6 +18,7 @@ const MyCompetitionsContent = () => {
     const [isModifyOpen, setIsModifyOpen] = useState(false);
     const [selectedMatch, setSelectedMatch] = useState(null);
     const [matchId, setMatchId] = useState(null);
+    
 
     useEffect(() => {
         fetch("/api/competitions", {
@@ -86,9 +87,12 @@ const MyCompetitionsContent = () => {
         setIsDeleteOpen(false);
 
         if (modified) {
-            loadFighters(); // Recharge les combattants après une modification ou suppression
+            loadFighters();
+             // Recharge les combattants après une modification ou suppression
         }
     };
+    const handleCloseCompetitionModal = () => setOpenCompetitionModal(false);
+
 
     return (
         <Container maxWidth="md">
@@ -224,7 +228,8 @@ const MyCompetitionsContent = () => {
             )}
             <AddCompetitionModal
                 open={openCompetitionModal}
-                handleClose={() => handleModalToggle(false, 'competition')} />
+                handleClose={handleCloseCompetitionModal}
+            />
         </Container>
     );
 };
