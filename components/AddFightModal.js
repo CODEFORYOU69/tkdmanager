@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, MenuItem, Select, InputLabel, FormControl, IconButton, Box } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -25,33 +26,37 @@ const AddFightModal = ({ open, onClose, competitionId }) => {
 
     const { notify } = useNotification();
 
-   const fetchData = () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            console.error('No token found');
-            return;
+
+  
+
+ useEffect(() => {
+        if (open) {
+            const fetchData = async () => {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    console.error('No token found');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/fighters', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    
+                    const data = await response.json();
+                    setFighters(data);
+                } catch (error) {
+                    console.error('Error fetching fighters:', error);
+                }
+            };
+
+            fetchData();
         }
-    
-        // Remarque : Assurez-vous que l'endpoint accepte clubId en tant que paramètre de requête si nécessaire
-        // ou ajustez en fonction des besoins réels de votre application.
-        fetch('/api/fighters', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            setFighters(data);
-        })
-        .catch(error => {
-            console.error('Error fetching fighters:', error.message);
-        });
-    };
+    }, [open]);
 
   
 

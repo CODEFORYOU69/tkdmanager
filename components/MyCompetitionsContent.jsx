@@ -67,6 +67,7 @@ const MyCompetitionsContent = () => {
     };
 
 
+
     const handleOpenDelete = (match) => {
         setMatchId(match.matchId);
         setSelectedMatch(match);
@@ -80,6 +81,7 @@ const MyCompetitionsContent = () => {
     const handleOpenModal = () => setModalOpen(true);
 
     const handleCloseModal = (modified = false) => {
+        setModalOpen(false);
         setIsModifyOpen(false);
         setIsDeleteOpen(false);
 
