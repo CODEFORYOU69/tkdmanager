@@ -9,6 +9,7 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     const { email, password } = req.body;
+
     try {
       let account = await authenticateUser(email, password);
       let role = "user";  // Définir le rôle par défaut comme utilisateur

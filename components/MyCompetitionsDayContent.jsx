@@ -28,6 +28,8 @@ export default function CompetitionDayContent({ competitions }) {
 
 
 
+
+
     useEffect(() => {
         const newRemainingFights = {};
         Object.keys(ongoingMatches).forEach(area => {

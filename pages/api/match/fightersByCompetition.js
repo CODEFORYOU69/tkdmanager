@@ -29,6 +29,7 @@ export default async function handler(req, res) {
         color: match.color,
         result: match.result,
         isCancelled: match.isCancelled,
+        matchId: match.id,
         rounds: match.rounds.map(round => ({
           isWinner: round.isWinner,
           victoryType: round.victoryType,

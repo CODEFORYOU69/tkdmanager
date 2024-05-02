@@ -8,6 +8,8 @@ import ProfileCard from '../components/ProfileCard';
 import { AuthProvider } from '../components/AuthProvider'; // Assurez-vous d'ajuster le chemin
 import { NotificationProvider } from "../components/NotificationService";
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { SnackbarProvider } from 'notistack'; // Importez SnackbarProvider
+
 
 const queryClient = new QueryClient();
 
@@ -39,16 +41,23 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider theme={theme}>
-      <NotificationProvider>
-        <AuthProvider> 
-          <Layout>
-            <CssBaseline />
-            <MobileNavbar />
-            <ProfileCard />
-            <Component {...pageProps} />
-          </Layout>
-        </AuthProvider>
-      </NotificationProvider>
+      <SnackbarProvider iconVariant={{
+    success: '✅',
+    error: '✖️',
+    warning: '⚠️',
+    info: 'ℹ️',
+  }} maxSnack={3}> {/* Ajoutez cette ligne */}
+                    <NotificationProvider>
+                        <AuthProvider> 
+                            <Layout>
+                                <CssBaseline />
+                                <MobileNavbar />
+                                <ProfileCard />
+                                <Component {...pageProps} />
+                            </Layout>
+                        </AuthProvider>
+                    </NotificationProvider>
+                </SnackbarProvider>
     </ThemeProvider>
   </QueryClientProvider>
 

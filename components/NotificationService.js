@@ -11,7 +11,13 @@ export const NotificationProvider = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();
 
     const notify = useCallback((message, options) => {
-        enqueueSnackbar(message, options);
+        enqueueSnackbar(message, {
+            ...options,
+            anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'center',
+            },
+        });
     }, [enqueueSnackbar]);
 
     return (
