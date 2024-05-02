@@ -41,7 +41,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider theme={theme}>
-      <SnackbarProvider maxSnack={3}> {/* Ajoutez cette ligne */}
+      <SnackbarProvider iconVariant={{
+    success: '✅',
+    error: '✖️',
+    warning: '⚠️',
+    info: 'ℹ️',
+  }} maxSnack={3}> {/* Ajoutez cette ligne */}
                     <NotificationProvider>
                         <AuthProvider> 
                             <Layout>
