@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {Button, Grid, Container, Typography, List, ListItem, IconButton, Paper, Avatar, Box } from '@mui/material';
+import { Button, Grid, Container, Typography, List, ListItem, IconButton, Paper, Avatar, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModifyCoachModal from './ModifyCoachModal';
 import DeleteUser from './DeleteUser';
-import LoadingWithImage from './LoadingWithImage'; // Adjust path as necessary
 import AddUserForm from './AddUserForm';
 
 
@@ -86,55 +85,52 @@ const MyCoachesContent = () => {
         open={isAddUserOpen}
         handleClose={handleAddUserClose}
       />
-      {loading ? (
-        <LoadingWithImage />
-      ) : (
-        <Container maxWidth="sm">
-          <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
-            <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>My Coachs</Typography>
-          </Box>       
-          <List sx={{ width: '100%' }}>
-            {coaches.map(coach => (
-              <ListItem key={coach.id} sx={{ px: 0 }}>
-                <Paper elevation={3} sx={{
-                  p: 2,
-                  m: 1,
-                  backgroundColor: '#f5f5f5',
-                  borderRadius: 2,
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: '100%'
-                }}>
-                  <Grid container spacing={2} alignItems="center">
-                    <Grid item>
-                      <Avatar src={coach.image} alt={coach.firstName} sx={{ width: 100, height: 100 }} />
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant="h6" color="text.primary">
-                        {coach.name}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <IconButton color="primary" onClick={() => handleOpenModify(coach)}>
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton color="error" onClick={() => handleOpenDelete(coach)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Grid>
+      <Container maxWidth="sm">
+        <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
+          <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>My Coachs</Typography>
+        </Box>
+        <List sx={{ width: '100%' }}>
+          {coaches.map(coach => (
+            <ListItem key={coach.id} sx={{ px: 0 }}>
+              <Paper elevation={3} sx={{
+                p: 2,
+                m: 1,
+                backgroundColor: '#f5f5f5',
+                borderRadius: 2,
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%'
+              }}>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item>
+                    <Avatar src={coach.image} alt={coach.firstName} sx={{ width: 100, height: 100 }} />
                   </Grid>
-                </Paper>
-              </ListItem>
-            ))}
-          </List>
-          {selectedCoach && (
-            <>
-              <ModifyCoachModal coach={selectedCoach} open={isModifyOpen} onClose={() => handleClose(true)} />
-              <DeleteUser coach={selectedCoach} open={isDeleteOpen} onClose={handleClose} />
-            </>
-          )}
-        </Container>
-      )}
+                  <Grid item xs>
+                    <Typography variant="h6" color="text.primary">
+                      {coach.name}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <IconButton color="primary" onClick={() => handleOpenModify(coach)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton color="error" onClick={() => handleOpenDelete(coach)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </ListItem>
+          ))}
+        </List>
+        {selectedCoach && (
+          <>
+            <ModifyCoachModal coach={selectedCoach} open={isModifyOpen} onClose={() => handleClose(true)} />
+            <DeleteUser coach={selectedCoach} open={isDeleteOpen} onClose={handleClose} />
+          </>
+        )}
+      </Container>
+
     </div>
   );
 };

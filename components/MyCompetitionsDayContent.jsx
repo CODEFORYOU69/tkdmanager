@@ -23,6 +23,9 @@ export default function CompetitionDayContent({ competitions }) {
     const [remainingFightsByArea, setRemainingFightsByArea] = useState({});
     const [duplicateFights, setDuplicateFights] = useState(new Set());
     const [roundSavedData, setRoundSavedData] = useState([]);
+    const [activeAreas, setActiveAreas] = useState({});
+
+    
 
     console.log('Competitions state:', comp); // Ajoutez cette ligne
 
@@ -238,6 +241,7 @@ export default function CompetitionDayContent({ competitions }) {
         setIsModalOpen(false);
         setSelectedMatch(null);
     };
+    
 
     return (
         <Container maxWidth="lg" sx={{ display: 'flex' }}>
@@ -245,9 +249,22 @@ export default function CompetitionDayContent({ competitions }) {
                 anchor="left"
                 open={isModalOpen}
                 onClose={closeModal}
-                sx={{ width: 250 }}
+                sx={{
+                    width: 250,
+                    boxShadow: 1,
+                    borderRadius: 2,
+                    p: 2,
+                    backgroundColor: 'rgba(255, 255, 255, 1)', // Fond semi-transparent
+
+                }}
             >
-                <List>
+                <List sx={{
+                    m: 1,
+                    boxShadow: 2,
+                    borderRadius: 2,
+                    p: 2,
+
+                }}>
                     <ListItem button onClick={() => handleAreaChange('All')}>
                         <ListItemText primary="All Areas" />
                     </ListItem>

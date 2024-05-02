@@ -1,8 +1,7 @@
 // pages/login.tsx
 import React, { useState } from 'react';
 import { useNotification } from './NotificationService'; // Assurez-vous que le chemin est correct
-
-import { TextField, Button, Container, Typography } from '@mui/material';
+import {Box, TextField, Button, Container, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 
@@ -49,9 +48,9 @@ const Login = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Typography component="h1" variant="h5">
-        Connexion
-      </Typography>
+      <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
+        <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>Connexion</Typography>
+      </Box>
       <form onSubmit={handleSubmit}>
         <TextField
           variant="outlined"

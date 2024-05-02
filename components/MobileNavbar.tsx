@@ -9,6 +9,7 @@ import SportsIcon from '@mui/icons-material/Sports';
 import SportsMartialArtsIcon from '@mui/icons-material/SportsMartialArts';
 import SocialIcon from '@mui/icons-material/PeopleOutline'; // Icon for Social Media
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useRouter } from 'next/router';
 
 const MobileNavbar: React.FC = () => {
@@ -73,7 +74,7 @@ const MobileNavbar: React.FC = () => {
           TKD MANAGER
         </Typography>
         <BottomNavigation sx={{backgroundColor: '#556cd6'}} value={value} onChange={(event, newValue) => handleChange(newValue)} showLabels>
-          <BottomNavigationAction color="primary" label="" value="" icon={<HomeIcon />} />
+          <BottomNavigationAction color="primary" label="Home" value="" icon={<HomeIcon />} />
           <BottomNavigationAction label="Profile" value="profile" icon={<AccountCircleIcon />} />
           <BottomNavigationAction label="Dashboard" value="dashboard" icon={<DashboardIcon />} />
           <BottomNavigationAction label="Coach" value="my-coaches" icon={<SportsIcon />} />
@@ -81,7 +82,7 @@ const MobileNavbar: React.FC = () => {
           <BottomNavigationAction label="Competition" value="mycompetitions" icon={<EmojiEventsIcon />} />
           <BottomNavigationAction label="Fight Day" value="competitionday" icon={<SportsMartialArtsIcon />} />
           <BottomNavigationAction label="Social" value="socialMedia" icon={<SocialIcon />} />
-          <BottomNavigationAction label="Log out" value="login" icon={<HomeIcon />} onClick={handleLogout} />
+          <BottomNavigationAction  label="Log out" value="login" icon={<LogoutIcon color='error' />} onClick={handleLogout} />
         </BottomNavigation>
       </Toolbar>
     </AppBar>

@@ -15,7 +15,7 @@ export const NotificationProvider = ({ children }) => {
             ...options,
             anchorOrigin: {
                 vertical: 'top',
-                horizontal: 'center',
+                horizontal: 'right',
             },
         });
     }, [enqueueSnackbar]);

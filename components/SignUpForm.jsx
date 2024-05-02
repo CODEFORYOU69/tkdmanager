@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import { TextField, Button, Box, Container } from '@mui/material';
+import { TextField, Button, Box, Container, Typography } from '@mui/material';
 import { CldUploadWidget } from 'next-cloudinary';
 import { useNotification } from './NotificationService';
 import Joi from 'joi';
@@ -67,6 +67,9 @@ const SignUpForm = () => {
 
   return (
     <Container maxWidth="sm">
+      <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
+        <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>Inscription</Typography>
+      </Box>
       <>
         <CldUploadWidget uploadPreset="tkdmanagerimage"
           onSuccess={(results) => {

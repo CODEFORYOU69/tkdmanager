@@ -1,4 +1,3 @@
-// pages/dashboard.tsx
 import ProtectedRoute from '../components/ProtectedRoute';
 import MyCompetitionDayContent  from '../components/MyCompetitionsDayContent'; // Assumed component
 
