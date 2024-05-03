@@ -17,6 +17,7 @@ const categories = {
         Baby: [],
         Pupille: [],
         Benjamins: ['-21kg', '-24kg', '-27kg', '-30kg', '-33kg', '-37kg', '-41kg', '-45kg', '-49kg', '+49kg'],
+        Minimes: ['-27kg', '-30kg', '-33kg', '-37kg', '-41kg', '-45kg', '-49kg', '-53kg', '-57kg', '+57kg'],
         Cadets: ['-33kg', '-37kg', '-41kg', '-45kg', '-49kg', '-53kg', '-57kg', '-61kg', '-65kg', '+65kg'],
         Junior: ['-45kg', '-48kg', '-51kg', '-55kg', '-59kg', '-63kg', '-68kg', '-73kg', '-78kg', '+78kg'],
         Espoir: ['-54kg', '-58kg', '-63kg', '-68kg', '-74kg', '-78kg', '-84kg', '+84kg'],
@@ -27,6 +28,7 @@ const categories = {
         Baby: [],
         Pupille: [],
         Benjamins: ['-17kg', '-20kg', '-23kg', '-26kg', '-29kg', '-33kg', '-37kg', '-41kg', '-44kg', '+44kg'],
+        Minimes: ['-23kg', '-26kg', '-29kg', '-33kg', '-37kg', '-41kg', '-44kg','-47kg','-51kg', '+51kg'],
         Cadets: ['-29kg', '-33kg', '-37kg', '-41kg', '-44kg', '-47kg', '-51kg', '-55kg', '-59kg', '+59kg'],
         Junior: ['-42kg', '-44kg', '-46kg', '-49kg', '-52kg', '-55kg', '-59kg', '-63kg', '-68kg', '+68kg'],
         Espoir: ['-46kg', '-49kg', '-53kg', '-57kg', '-62kg', '-67kg', '-73kg', '+73kg'],
@@ -132,8 +134,8 @@ const AddFighterModal = ({ open, handleClose }) => {
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                 />
-                <FormControl fullWidth margin="dense">
-                    <InputLabel>Sex</InputLabel>
+                <FormControl fullWidth >
+                    <InputLabel >Sex</InputLabel>
                     <Select value={sex} onChange={(e) => setSex(e.target.value)}>
                         <MenuItem value="Male">Male</MenuItem>
                         <MenuItem value="Female">Female</MenuItem>

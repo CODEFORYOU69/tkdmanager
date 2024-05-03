@@ -1,25 +1,42 @@
-.fighterImage {
+.fighterImageWrapper {
     position: absolute;
     top: 50%;
     left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    width: 220px; /* La taille totale incluant toutes les bordures */
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fighterImage {
     width: 200px;
     height: 200px;
-    z-index: 1000;
-    transform: translate(-50%, -50%);
-    clip-path: circle(50%); /* Crée un cercle parfait */
-    border-radius: 50%; /* Arrondit les coins */
-    border: 8px solid; /* Épaisseur de la bordure */
-    border-color: #1414f5/* Couleur de la bordure */}
+    clip-path: circle(50%);
+    border-radius: 50%;
+    position: relative;
+    
+}
 
-.fighterImage2 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 170px;
-    height: 170px;
-    z-index: 1000;
-    transform: translate(-50%, -50%);
-    clip-path: circle(50%); /* Crée un cercle parfait */
-    border-radius: 50%; /* Arrondit les coins */
-    border: 8px solid; /* Épaisseur de la bordure */
-    border-color: #cb0606 /* Couleur de la bordure */}
+.borderBlue {
+    border: 10px solid blue;
+    z-index: 100;
+    border-radius: 50%;
+
+}
+
+.borderWhite {
+    border: 10px solid white;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    z-index: 21;
+}
+
+.borderRed {
+    border: 10px solid red;
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
+    z-index: 22;
+}

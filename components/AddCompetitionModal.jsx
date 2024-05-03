@@ -32,7 +32,8 @@ const AddCompetitionModal = ({ open, handleClose }) => {
 
     if (response.ok) {
       notify('Competition added successfully', { variant: 'success' });
-      onClose(true); // Fermer la modale après l'ajout
+      onClose(true);
+      loadCompetitions(); // Fermer la modale après l'ajout
     } else {
       notify('Error while adding competition', { variant: 'error' });
     };
@@ -89,7 +90,7 @@ const AddCompetitionModal = ({ open, handleClose }) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => onClose(handleClose)}>Cancel</Button>
+        <Button onClick={() => handleClose(false)}>Cancel</Button>
         <Button onClick={handleSave}>Save</Button>
       </DialogActions>
     </Dialog>

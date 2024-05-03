@@ -20,14 +20,17 @@ const MyCompetitionsContent = () => {
     const [matchId, setMatchId] = useState(null);
     
 
-    useEffect(() => {
+    const loadCompetitions = () => {
         fetch("/api/competitions", {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         })
             .then((res) => res.json())
             .then(setCompetitions)
             .catch(console.error);
-    }, []);
+    };
+    useEffect(() => {
+        loadCompetitions();
+    }, []); 
 
     const loadFighters = useCallback(() => {
         if (selectedCompetition) {
@@ -229,6 +232,7 @@ const MyCompetitionsContent = () => {
             <AddCompetitionModal
                 open={openCompetitionModal}
                 handleClose={handleCloseCompetitionModal}
+                loadCompetitions={loadCompetitions} 
             />
         </Container>
     );

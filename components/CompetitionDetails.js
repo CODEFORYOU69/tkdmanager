@@ -1,56 +1,176 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card, CardContent, Typography } from '@mui/material';
-import Image from 'next/image';
-import styles from './CompetitionDetails.module.css'; // Importer le fichier CSS
+import React, { useEffect, useState, useRef } from "react";
+import { Button, Card, CardContent, Typography } from "@mui/material";
+import Image from "next/image";
 
 const CompetitionDetails = ({ competition }) => {
-    const [fighters, setFighters] = useState([]);
+  const [fighters, setFighters] = useState([]);
 
-    useEffect(() => {
-        fetch(`/api/match/fighters?competitionId=${competition.id}`)
-            .then(res => res.json())
-            .then(data => {
-                setFighters(data.map(fighter => ({
-                    ...fighter,
-                    imageUrl: fighter.image
-                })));
-            })
-            .catch(err => console.error('Failed to load fighters', err));
-    }, [competition]);
+  useEffect(() => {
+    fetch(`/api/match/fighters?competitionId=${competition.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setFighters(
+          data.map((fighter) => ({
+            ...fighter,
+            imageUrl: fighter.image,
+          }))
+        );
+      })
+      .catch((err) => console.error("Failed to load fighters", err));
+  }, [competition]);
 
-    return (
-        <div>
-            <Typography variant="h4" color="primary" gutterBottom>
-                Fighters in {competition.name}
-            </Typography>
-            {fighters.map(fighter => (
-                <Card key={fighter.id} sx={{ marginBottom: 2 }}>
-                    <CardContent>
-                        <div style={{ position: 'relative', width: '100%', height: '300px' }}>
-                            <Image
-                                src={competition.image}
-                                layout="fill"
-                                objectFit="cover"
-                                alt="Background"
-                            />
-                            <div className={styles.fighterImage }>
-                                 <div className={styles.fighterImage2 }>
+const downloadImage = async (backgroundUrl, overlayUrl, filename) => {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = 600;
+  canvas.height = 600;
 
-                                <Image
-                                    src={fighter.image}
-                                    layout="fill"
-                                    objectFit="cover"
-                                    alt="Fighter"
-                                    Zindex="1"
-                                />
-                                </div>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            ))}
-        </div>
-    );
+  const loadImg = (src) =>
+    new Promise((resolve, reject) => {
+      const img = new window.Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+
+  try {
+    const background = await loadImg(backgroundUrl);
+    const overlay = await loadImg(overlayUrl);
+
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+    // Draw the blue circle
+    ctx.beginPath();
+    ctx.arc(300, 300, 100, 0, 2 * Math.PI);
+    ctx.strokeStyle = "blue";
+    ctx.lineWidth = 10;
+    ctx.stroke();
+
+    // Draw the white circle
+    ctx.beginPath();
+    ctx.arc(300, 300, 90, 0, 2 * Math.PI);
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 10;
+    ctx.stroke();
+
+    // Draw the red circle
+    ctx.beginPath();
+    ctx.arc(300, 300, 80, 0, 2 * Math.PI);
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 10;
+    ctx.stroke();
+
+    // Draw the overlay image inside the white circle
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(300, 300, 80, 0, 2 * Math.PI);
+    ctx.clip();
+    ctx.drawImage(overlay, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
+
+    const dataUrl = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (err) {
+    console.error("Error generating image:", err);
+  }
+};
+
+
+  return (
+    <div>
+      <Typography variant="h4" color="primary" gutterBottom>
+        Fighters in {competition.name}
+      </Typography>
+      {fighters.map((fighter) => (
+        <Card key={fighter.id} sx={{ marginBottom: 2 }}>
+  <CardContent>
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "300px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Image
+        src={competition.image}
+        layout="fill"
+        objectFit="cover"
+        alt="Background"
+      />
+      <div
+        style={{
+          position: "absolute",
+          width: "200px",
+          height: "200px",
+          borderRadius: "50%",
+          border: "10px solid blue",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          width: "180px",
+          height: "180px",
+          borderRadius: "50%",
+          border: "10px solid white",
+          clipPath: "circle(80px at center)",
+          overflow: "hidden",
+        }}
+      >
+        <Image
+          src={fighter.image}
+          layout="fill"
+          objectFit="cover"
+          alt="Fighter"
+        />
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          width: "160px",
+          height: "160px",
+          borderRadius: "50%",
+          border: "10px solid red",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: 16,
+          left: 16,
+        }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() =>
+            downloadImage(
+              competition.image,
+              fighter.image,
+              `Fighter_${fighter.firstName}_${fighter.lastName}_in_${competition.name}.png`
+            )
+          }
+          disabled={fighters.length === 0}
+        >
+          Download Image
+        </Button>
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
+      ))}
+    </div>
+  );
 };
 
 export default CompetitionDetails;
