@@ -24,16 +24,25 @@ const AddUserForm = ({ open, handleClose }) => {
         name: Joi.string().required().label("Name"),
     });
 
+    const errorMessages = {
+        'string.empty': 'Ce champ ne peut pas être vide',
+        'string.email': 'Veuillez entrer une adresse email valide',
+        'string.min': `Le mot de passe doit contenir au moins {#limit} caractères.`,
+        'string.pattern.base': 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre, un caractère spécial et doit faire au moins 8 caractères',
+        // Ajoutez d'autres messages d'erreur personnalisés ici
+    };
+
     const validate = () => {
         const { error } = schema.validate({ email, password, name }, { abortEarly: false });
         if (!error) return null;
 
         const newErrors = {};
         for (let detail of error.details) {
-            newErrors[detail.path[0]] = detail.message;
+            newErrors[detail.path[0]] = errorMessages[detail.type] || detail.message;
         }
         return newErrors;
     };
+
     // Function to get clubId from the stored JWT
     const getClubIdFromToken = () => {
         const token = localStorage.getItem('token');  // Retrieve the JWT token from localStorage

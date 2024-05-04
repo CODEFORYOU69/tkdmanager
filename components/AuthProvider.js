@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import LoadingWithImage from './LoadingWithImage'; // Vérifiez que le chemin d'importation est correct
+import router from 'next/router';
 
 const AuthContext = createContext(null);
 
@@ -9,6 +10,13 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState({ role:'', name: '', imageUrl: '', clubName: '', clubImageUrl: '', clubId: '' });
     const [loading, setLoading] = useState(true);
+
+      useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/'); // Redirige vers la page de connexion si le token n'existe pas
+    }
+  }, []);
 
     const fetchProfile = async () => {
         const role = localStorage.getItem('role').replace(/"/g, '');
@@ -67,6 +75,14 @@ if (role === 'user' && data.clubId) {
 
     const logout = () => {
         localStorage.removeItem('token');
+        setProfile({
+            role:'',
+            name: '',
+            imageUrl: '',
+            clubName: '',
+            clubImageUrl: '',
+            clubId: ''
+        });
         setUser(null);
         setLoading(false);
     };

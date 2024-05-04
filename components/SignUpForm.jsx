@@ -28,11 +28,19 @@ const SignUpForm = () => {
 
     const newErrors = {};
     for (let detail of error.details) {
-      newErrors[detail.path[0]] = detail.message;
+      newErrors[detail.path[0]] = errorMessages[detail.type] || detail.message;
     }
     return newErrors;
   };
+  const errorMessages = {
+    'string.empty': 'Ce champ ne peut pas être vide',
+    'string.email': 'Veuillez entrer une adresse email valide',
+    'string.min': `Le mot de passe doit contenir au moins {#limit} caractères.`,
+    'string.pattern.base': 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre, un caractère spécial et doit faire au moins 8 caractères',
+    // Ajoutez d'autres messages d'erreur personnalisés ici
+  };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 

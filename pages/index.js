@@ -74,7 +74,6 @@ const HomePage = () => {
       alt="TKD Manager Image" 
       width={100}
       height={100}
-      objectFit="contain"
       priority
     />
   </Box>
