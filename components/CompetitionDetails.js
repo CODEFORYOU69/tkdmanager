@@ -38,6 +38,7 @@ const downloadImage = async (backgroundUrl, overlayUrl, filename) => {
     const background = await loadImg(backgroundUrl);
     const overlay = await loadImg(overlayUrl);
 
+    // Draw the background image
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
     // Draw the blue circle
@@ -61,12 +62,16 @@ const downloadImage = async (backgroundUrl, overlayUrl, filename) => {
     ctx.lineWidth = 10;
     ctx.stroke();
 
-    // Draw the overlay image inside the white circle
+    // Draw the overlay image inside the red circle
     ctx.save();
     ctx.beginPath();
     ctx.arc(300, 300, 80, 0, 2 * Math.PI);
     ctx.clip();
-    ctx.drawImage(overlay, 0, 0, canvas.width, canvas.height);
+    // Calculate the size to draw the overlay
+    const overlayDiameter = 160; // 80 radius * 2
+    const overlayX = 220; // 300 - 80
+    const overlayY = 220; // 300 - 80
+    ctx.drawImage(overlay, overlayX, overlayY, overlayDiameter, overlayDiameter);
     ctx.restore();
 
     const dataUrl = canvas.toDataURL("image/png");
@@ -80,6 +85,7 @@ const downloadImage = async (backgroundUrl, overlayUrl, filename) => {
     console.error("Error generating image:", err);
   }
 };
+
 
 
   return (
