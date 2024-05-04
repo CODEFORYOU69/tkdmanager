@@ -27,7 +27,6 @@ export default function CompetitionDayContent({ competitions }) {
 
     
 
-    console.log('Competitions state:', comp); // Ajoutez cette ligne
 
 
 

@@ -30,15 +30,29 @@ export default async function handler(req, res) {
                 if (user.password !== hashedPassword) {
                     updateData.password = hashedPassword;
                 }
+                const updatedProfile = await model.update({
+                    where: { email: userId },
+                    data: updateData
+                })
+                res.status(200).json(updatedProfile);
+            } else if (!password) {
+                delete updateData.password;
+                const updatedProfile = await model.update({
+                    where: { email: userId },
+                    data: updateData
+                });
+                res.status(200).json(updatedProfile);
             }
 
             const updatedProfile = await model.update({
                 where: { email: userId },
                 data: updateData
-            });
+            } 
+        );
 
             res.status(200).json(updatedProfile);
-        } catch (error) {
+            
+        }  catch (error) {
             console.error('Failed to update profile:', error);
             res.status(500).send('Internal Server Error');
         }

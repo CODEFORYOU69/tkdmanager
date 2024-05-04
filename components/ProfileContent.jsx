@@ -37,7 +37,7 @@ const Profile = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'password') {
+        if (name === ('password'|| '') ){
             setPassword(value);
         } else {
             setProfile(prev => ({ ...prev, [name]: value }));
@@ -79,7 +79,32 @@ const Profile = () => {
         <Container maxWidth="sm">
             <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>
                 <Typography variant="h4" color="primary" sx={{ textAlign: 'center' }}>Edit {profileType === 'user' ? 'User' : 'Club'} Profile</Typography>
-            </Box>            <form onSubmit={handleSubmit}>
+            </Box>
+            <CldUploadWidget uploadPreset="tkdmanagerimage"
+                onSuccess={(results) => {
+                    setImageUrl(results.info.url);
+                }}>
+                {({ open }) => {
+                    return (
+                        <button
+                            style={{
+                                border: '2px solid black', // Sets a black border around the button
+                                padding: '10px 20px', // Adds some padding inside the button for better spacing
+                                color: 'white', // Sets the text color to white
+                                cursor: 'pointer',
+                                margin: '25px', // Adds some margin around the button 
+                                borderRadius: '5px', // Rounds the corners of the button
+                                backgroundColor: 'black', // Sets the background color to black
+
+                                // Changes the cursor to a pointer on hover
+                            }}
+                            onClick={() => open()}>
+                            Upload profil Image
+                        </button>
+                    );
+                }}
+            </CldUploadWidget>          
+              <form onSubmit={handleSubmit}>
                 <TextField
                     fullWidth
                     label="Name"
@@ -105,30 +130,7 @@ const Profile = () => {
                     onChange={handleInputChange}
                     margin="normal"
                 />
-                <CldUploadWidget uploadPreset="tkdmanagerimage"
-                    onSuccess={(results) => {
-                        setImageUrl(results.info.url);
-                    }}>
-                    {({ open }) => {
-                        return (
-                            <button
-                                style={{
-                                    border: '2px solid black', // Sets a black border around the button
-                                    padding: '10px 20px', // Adds some padding inside the button for better spacing
-                                    color: 'white', // Sets the text color to white
-                                    cursor: 'pointer',
-                                    margin: '25px', // Adds some margin around the button 
-                                    borderRadius: '5px', // Rounds the corners of the button
-                                    backgroundColor: 'black', // Sets the background color to black
-
-                                    // Changes the cursor to a pointer on hover
-                                }}
-                                onClick={() => open()}>
-                                Upload profil Image
-                            </button>
-                        );
-                    }}
-                </CldUploadWidget>
+               
 
                 <Button type="submit" color="primary" variant="contained">
                     Save Changes

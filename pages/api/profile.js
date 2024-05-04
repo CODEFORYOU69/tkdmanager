@@ -28,7 +28,10 @@ export default async function handler(req, res) {
                 where: { email: email },
             });
             if (profile) {
-                res.status(200).json(profile);
+                //profile withouth password
+                const { password, ...rest } = profile;
+
+                res.status(200).json(rest);
             } else {
                 res.status(404).json({ message: 'Profile not found' });
             }
