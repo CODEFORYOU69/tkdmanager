@@ -20,43 +20,24 @@ const MyCoachesContent = () => {
     setIsAddUserOpen(true);
   };
 
+
+
   const handleAddUserClose = () => {
     setIsAddUserOpen(false);
   };
-  const fetchData = () => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
 
-    // Remarque : Assurez-vous que l'endpoint accepte clubId en tant que paramètre de requête si nécessaire
-    // ou ajustez en fonction des besoins réels de votre application.
-    fetch('/api/users', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+  const loadCoachs = () => {
+    fetch("/api/users", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setCoaches(data);
-      })
-      .catch(error => {
-        console.error('Error fetching coachs:', error.message);
-      });
+      .then((res) => res.json())
+      .then(setCoaches)
+      .catch(console.error);
   };
-
   useEffect(() => {
-    fetchData();
+    loadCoachs();
   }, []);
+
 
   const handleOpenModify = (coach) => {
     setSelectedCoach(coach);
@@ -84,6 +65,7 @@ const MyCoachesContent = () => {
       <AddUserForm
         open={isAddUserOpen}
         handleClose={handleAddUserClose}
+        
       />
       <Container maxWidth="sm">
         <Box sx={{ border: 1, borderColor: 'grey.300', p: 2, my: 2 }}>

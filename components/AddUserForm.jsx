@@ -25,7 +25,7 @@ const AddUserForm = ({ open, handleClose }) => {
     });
 
     const validate = () => {
-        const { error } = schema.validate({ email, password, clubName, name }, { abortEarly: false });
+        const { error } = schema.validate({ email, password, name }, { abortEarly: false });
         if (!error) return null;
 
         const newErrors = {};
@@ -86,7 +86,7 @@ const AddUserForm = ({ open, handleClose }) => {
     return (
         <Dialog open={open} onClose={handleClose}>
 
-            <DialogTitle>Add New User</DialogTitle>
+            <DialogTitle>Add New Coach</DialogTitle>
             <CldUploadWidget uploadPreset="tkdmanagerimage"
                 onSuccess={(results) => {
                     setImageUrl(results.info.url);
@@ -106,7 +106,7 @@ const AddUserForm = ({ open, handleClose }) => {
                                 // Changes the cursor to a pointer on hover
                             }}
                             onClick={() => open()}>
-                            Upload Profile Image
+                            Upload Coach Photo
                         </button>
                     );
                 }}
