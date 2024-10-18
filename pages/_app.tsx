@@ -10,8 +10,9 @@ import { NotificationProvider } from "../components/NotificationService";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { SnackbarProvider } from 'notistack'; // Importez SnackbarProvider
 
-
 const queryClient = new QueryClient();
+
+
 
 
 const theme = createTheme({
@@ -30,7 +31,7 @@ const theme = createTheme({
     },
   },
     typography: {
-      fontFamily: 'Roboto, Arial, sans-serif',
+      fontFamily: 'Syne, Roboto, Arial, sans-serif',
       h4: {
         fontWeight: 600,
       },
@@ -46,7 +47,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     error: '✖️',
     warning: '⚠️',
     info: 'ℹ️',
-  }} maxSnack={3}> {/* Ajoutez cette ligne */}
+  }} maxSnack={3}> 
                     <NotificationProvider>
                         <AuthProvider> 
                             <Layout>

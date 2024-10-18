@@ -11,8 +11,7 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          {/* Correct self-closing tag for the link element */}
-          <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+          <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
         </Head>
         <body>
           <Main />
