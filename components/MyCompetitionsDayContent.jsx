@@ -54,7 +54,7 @@ export default function CompetitionDayContent({ competitions }) {
       if (count > 1) newDuplicates.add(parseInt(fight));
     });
     setDuplicateFights(newDuplicates);
-  }, [ongoingMatches, currentFightNumber, calculateRemainingFights]);
+  }, [ongoingMatches, currentFightNumber]);
 
   // ...
 
@@ -211,23 +211,20 @@ export default function CompetitionDayContent({ competitions }) {
     setCurrentFightNumber((prev) => ({ ...prev, [area]: value }));
   };
 
-  const calculateRemainingFights = useCallback(
-    (area) => {
-      if (!currentFightNumber[area] || !ongoingMatches[area]) return 0; // Renvoie 0 si aucun combat actuel n'est défini ou si aucun combat n'est en cours pour l'aire
+  const calculateRemainingFights = (area) => {
+    if (!currentFightNumber[area] || !ongoingMatches[area]) return 0; // Renvoie 0 si aucun combat actuel n'est défini ou si aucun combat n'est en cours pour l'aire
 
-      // Trouver le prochain numéro de combat après le combat actuel
-      const nextFightIndex = ongoingMatches[area].findIndex(
-        (match) => match.fightNumber > currentFightNumber[area]
-      );
+    // Trouver le prochain numéro de combat après le combat actuel
+    const nextFightIndex = ongoingMatches[area].findIndex(
+      (match) => match.fightNumber > currentFightNumber[area]
+    );
 
-      if (nextFightIndex === -1) return 0; // Renvoie 0 si aucun combat futur n'est trouvé
+    if (nextFightIndex === -1) return 0; // Renvoie 0 si aucun combat futur n'est trouvé
 
-      // Calcul du nombre de combats entre le combat actuel et le prochain combat enregistré
-      const nextFightNumber = ongoingMatches[area][nextFightIndex].fightNumber;
-      return nextFightNumber - currentFightNumber[area];
-    },
-    [currentFightNumber, ongoingMatches]
-  );
+    // Calcul du nombre de combats entre le combat actuel et le prochain combat enregistré
+    const nextFightNumber = ongoingMatches[area][nextFightIndex].fightNumber;
+    return nextFightNumber - currentFightNumber[area];
+  };
 
   const handleCompetitionChange = (event) => {
     const competition = competitions.find((c) => c.id === event.target.value);
